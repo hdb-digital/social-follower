@@ -3,43 +3,53 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>HDBank · Follower đối thủ</title>
+<title>HDBank · Follower tracking</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#da2128">
+<meta name="theme-color" content="#DA2128">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Font thương hiệu: BauhausVO (tiêu đề) và Myriad Pro (nội dung). Máy chưa cài font gốc sẽ dùng
+<!-- Font thương hiệu: BauhausVO (chỉ dùng cho tiêu đề) và Myriad Pro (nội dung). Máy chưa cài font gốc sẽ dùng
      Quicksand (thay BauhausVO) và Source Sans 3 (cùng nhà thiết kế Adobe, rất gần Myriad Pro). -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
 <style>
 /* =========================================================
-   TOKENS — HDBank Digital Playbook, đồng bộ với các trang Digital Hub (ggmap-dashboard)
-   Chỉ 5 màu thương hiệu + sắc độ 10–100%; dải màu chạy từ dưới lên; chỉ giao diện sáng.
+   TOKENS — HDBank Digital Playbook (mục 2.a–2.g)
+   - Chỉ dùng 5 màu thương hiệu (Đỏ, Xám, Cam, Cam Vàng, Vàng) và sắc độ 10–100% của chúng.
+     Không dùng màu ngoài hệ (đã bỏ xanh lá cho số tăng: tăng = xám đậm + ▲, giảm = đỏ + ▼).
+   - Dải màu chủ đạo chạy từ dưới lên (Cam Vàng → Cam → Đỏ, đỏ đặc chiếm phần lớn phía trên).
+     Dải trái → phải chỉ dành cho biển hiệu hình thang nên không dùng trên trang này.
+   - Chỉ giao diện sáng; logo dương bản trên nền trắng trơn.
    ========================================================= */
 :root {
   color-scheme: light;
+  accent-color: #DA2128;
+  /* 5 màu thương hiệu */
   --red: #DA2128; --grey: #58595B; --orange: #FAA61A; --amber: #FFC20E; --yellow: #FFDD00;
+  /* Sắc độ (tint) theo bước 10% — pha với trắng */
   --red-10: #FBE9EA; --red-20: #F8D3D4;
-  --grey-10: #EEEEEF; --grey-20: #DEDEDE; --grey-30: #CDCDCE; --grey-50: #ACACAD; --grey-60: #9B9B9D; --grey-70: #8A8B8C;
-  --orange-10: #FEF6E9; --orange-20: #FEEDD1;
+  --grey-10: #EEEEEF; --grey-20: #DEDEDE; --grey-30: #CDCDCE; --grey-50: #ACACAD; --grey-70: #8A8B8C;
+  --orange-10: #FEF6E8; --orange-20: #FEEDD1;
   --white: #FFFFFF;
   --muted: var(--grey);
 
-  /* Màu theo thực thể (giữ nguyên trên mọi biểu đồ): HDBank = đỏ, ngân hàng đang so sánh = cam,
-     ngân hàng khác = xám 30%. Bộ đỏ / cam / xám 30% đã kiểm định ở dashboard Google Maps (CVD ΔE ≥ 15,4). */
-  --c-me: var(--red); --c-cmp: var(--orange); --c-other: var(--grey-30);
+  /* Màu theo thực thể (giữ nguyên trên mọi biểu đồ): HDBank = Đỏ; tối đa 5 đối thủ đang so sánh có màu + kiểu nét riêng
+     (đồng bộ với trang Xếp hạng app, chỉ dùng màu thương hiệu); ngân hàng khác = Xám 20% */
+  --c-me: var(--red); --c-other: var(--grey-20);
+  --c1: var(--grey); --c2: var(--orange); --c3: var(--grey-70); --c4: var(--amber); --c5: var(--grey);
   --grid: var(--grey-20); --axis: var(--grey-50); --hover: var(--red-10);
-  --up: #1F7A45; --down: var(--red);
+  --up: var(--grey); --down: var(--red); --flat: var(--grey);
 
   --font-head: "BauhausVO", "Quicksand", "Segoe UI", system-ui, sans-serif;
   --font-body: "Myriad Pro", "Source Sans 3", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
 
+  /* Dải màu chủ đạo, dưới → trên */
   --kv-band: linear-gradient(0deg, var(--amber) 0%, var(--orange) 7%, var(--red) 26%, var(--red) 100%);
-  --band-lr: linear-gradient(90deg, var(--orange) 0%, var(--red) 100%);
+  --band-up: linear-gradient(0deg, var(--amber) 0%, var(--orange) 35%, var(--red) 100%);
   --icon-bg: linear-gradient(0deg, var(--amber) 0%, var(--orange) 24%, var(--red) 68%);
 
-  --lift: 0 1px 2px rgba(88,89,91,.10), 0 10px 24px -12px rgba(88,89,91,.30), 0 36px 72px -32px rgba(110,10,16,.35);
+  /* Đổ bóng nhẹ tạo chiều sâu (KV 2.e) — chỉ pha từ Xám và Đỏ thương hiệu */
+  --lift: 0 1px 2px rgba(88,89,91,.10), 0 10px 24px -12px rgba(88,89,91,.30), 0 36px 72px -32px rgba(218,33,40,.28);
   --lift-sm: 0 1px 2px rgba(88,89,91,.08), 0 8px 22px -14px rgba(88,89,91,.35);
 
   --wrap: 1240px;
@@ -56,23 +66,29 @@ a { color: var(--red); }
 :focus-visible { outline: 3px solid var(--red); outline-offset: 2px; border-radius: 6px; }
 .wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)); }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.vh { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ---------- Nút ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 0 20px;
   border-radius: 999px; border: 2px solid transparent; font: 600 15px/1 var(--font-body); cursor: pointer; text-decoration: none;
-  transition: background-color .2s, color .2s, box-shadow .2s, transform .2s;
+  transition: background-color .2s, color .2s, box-shadow .2s;
 }
 .btn svg { width: 18px; height: 18px; flex: none; fill: currentColor; }
 .btn-outline { border-color: var(--red); color: var(--red); background: var(--white); }
 .btn-outline:hover { background: var(--red-10); }
+.btn-sm { min-height: 36px; padding: 0 16px; font-size: 14px; }
+.btn-red { background: var(--red); color: var(--white); }
+.btn-red:hover:not(:disabled) { box-shadow: 0 10px 20px -10px rgba(218,33,40,.75); }
+.btn:disabled { opacity: .6; cursor: progress; }
 
-/* ---------- Header ---------- */
+/* ---------- Header: nền trắng, logo dương bản góc trên trái ---------- */
 .site-header { background: var(--white); }
-.header-inner { display: flex; align-items: center; gap: 20px; min-height: 72px; }
-.brand { display: flex; align-items: center; gap: 16px; text-decoration: none; flex: none; padding-block: 14px; }
+.header-inner { display: flex; align-items: center; gap: 24px; min-height: 72px; }
+/* Vùng an toàn logo = chiều cao chữ "H" (~ 2/3 chiều cao logo) → giữ khoảng trống ≥ 22px quanh logo */
+.brand { display: flex; align-items: center; text-decoration: none; flex: none; padding-block: 16px; }
 .brand-logo { display: block; height: 34px; width: auto; min-width: 55px; }
-.brand-name { font: 700 16px/1.1 var(--font-head); color: var(--grey); white-space: nowrap; padding-left: 16px; border-left: 1px solid var(--grey-20); }
+.brand-name { font: 700 16px/1.1 var(--font-head); color: var(--grey); white-space: nowrap; margin-left: 24px; padding-left: 20px; border-left: 1px solid var(--grey-20); }
 .nav { display: flex; gap: 4px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
 .nav::-webkit-scrollbar { display: none; }
 .nav a { white-space: nowrap; text-decoration: none; color: var(--grey); font-weight: 600; font-size: 15px; padding: 9px 14px; border-radius: 999px; transition: color .2s, background-color .2s; }
@@ -80,28 +96,47 @@ a { color: var(--red); }
 .nav a[aria-current="page"] { color: var(--red); background: var(--red-10); }
 .nav .short { display: none; }
 
-/* ---------- Hero ---------- */
+/* ---------- Hero: dải màu chủ đạo dưới → trên + đồ họa cánh diều trên nền đỏ ---------- */
 .hero { position: relative; overflow: hidden; isolation: isolate; color: var(--white); background: var(--kv-band); }
 .hero::after {
   content: ""; position: absolute; z-index: -1; top: 0; right: 0; bottom: 0; width: min(56%, 760px);
   background: url("assets/kite.jpg") left top / cover no-repeat;
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 50%); mask-image: linear-gradient(90deg, transparent 0%, #000 50%);
 }
-.hero-inner { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px 24px; align-items: start; padding-block: 40px 104px; }
-.hero-icon { --s: 68px; box-shadow: 0 0 0 3px rgba(255,255,255,.9), 0 14px 28px -12px rgba(0,0,0,.45); }
+.hero-inner { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px 24px; align-items: start; padding-block: 40px 112px; }
+/* Icon cấp 1: biểu tượng trắng trong khối vuông bo góc kiểu icon app iPhone, nền dải màu thương hiệu */
+.hero-icon { --s: 68px; box-shadow: 0 0 0 3px var(--white), 0 14px 28px -12px rgba(88,89,91,.6); }
 .hero h1 { color: var(--white); font-size: clamp(30px, 4vw, 46px); letter-spacing: -.01em; line-height: 1.08; }
-.hero-lead { margin-top: 10px; font-size: 18px; max-width: 40em; text-wrap: pretty; color: rgba(255,255,255,.95); }
+.hero-lead { margin-top: 10px; font-size: 18px; max-width: 40em; text-wrap: pretty; color: var(--white); }
 .hero-meta { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.hero-meta li { font-size: 14px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); color: var(--white); }
+.hero-meta li { font-size: 14px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.4); color: var(--white); }
 .icon1 { --s: 56px; width: var(--s); height: var(--s); border-radius: calc(var(--s) * .2237); flex: none; display: grid; place-items: center; background: var(--icon-bg); }
 .icon1 svg { width: 56%; height: 56%; fill: var(--white); }
 
+/* ---------- Mật khẩu: data.json được mã hóa, nhập đúng mật khẩu mới giải mã và hiện dashboard ---------- */
+body.locked .filter-dock, body.locked main { display: none; }
+.gate { position: relative; z-index: 30; margin-top: -72px; padding-bottom: 48px; }
+.gate-card { max-width: 440px; margin-top: 0; display: grid; gap: 12px; box-shadow: var(--lift); }
+.gate-card h2 { font-size: 20px; }
+.gate-card .desc { color: var(--muted); font-size: 14px; }
+.gate-card label { font-weight: 600; font-size: 14px; }
+.gate-card input[type=password] {
+  font: 400 15px/1.2 var(--font-body); color: var(--grey); background: var(--white);
+  border: 1.5px solid var(--grey-20); border-radius: 999px; padding: 10px 14px; min-height: 42px; transition: border-color .2s, box-shadow .2s;
+}
+.gate-card input[type=password]:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px var(--red-10); }
+.gate-card .gate-remember { display: flex; align-items: center; gap: 8px; font-weight: 400; color: var(--muted); }
+.gate-card .gate-remember input { width: 18px; height: 18px; accent-color: var(--red); }
+.gate-err { margin: 0; color: var(--red); font-size: 14px; font-weight: 600; }
+.gate-card .btn { justify-self: start; }
+
 /* ---------- Bộ lọc ---------- */
-.filter-dock { position: relative; z-index: 30; margin-top: -64px; padding-block: 0 4px; }
-.filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 20px; background: var(--white); border-radius: 24px; padding: 16px 20px; box-shadow: var(--lift); }
-.f-group { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); min-width: 0; }
-.f-actions { margin-left: auto; }
-/* Nút chọn dạng viên thuốc (Nền tảng, Khoảng thời gian, kiểu biểu đồ) */
+.filter-dock { position: relative; z-index: 30; margin-top: -72px; padding-block: 0 4px; }
+.filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 24px; background: var(--white); border-radius: 24px; padding: 18px 22px; box-shadow: var(--lift); }
+.f-group { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); min-width: 0; margin: 0; padding: 0; border: 0; }
+.f-group > legend { padding: 0; margin-bottom: 6px; float: left; width: 100%; }
+.f-group > legend + * { clear: both; }
+/* Nút chọn dạng viên thuốc (Nền tảng, chọn nhanh, kiểu biểu đồ) */
 .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--grey-10); border-radius: 999px; }
 .seg button {
   display: inline-flex; align-items: center; gap: 8px; font: 600 14px/1 var(--font-body); color: var(--grey); background: none; border: 0;
@@ -117,27 +152,73 @@ select {
   background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 8l4.5 4.5L14.5 8' fill='none' stroke='%2358595B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 12px center / 16px no-repeat;
 }
 select:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px var(--red-10); }
-.f-cmp select { border-color: var(--orange); }
 
-/* ---------- Mật khẩu: data.json được mã hóa, nhập đúng mật khẩu mới giải mã và hiện dashboard ---------- */
-body.locked .filter-dock, body.locked main { display: none; }
-.gate { position: relative; z-index: 30; margin-top: -64px; padding-bottom: 48px; }
-.gate-card { max-width: 440px; margin-top: 0; display: grid; gap: 12px; box-shadow: var(--lift); }
-.gate-card h2 { font-size: 20px; }
-.gate-card .desc { color: var(--muted); font-size: 14px; }
-.gate-card label { font-weight: 600; font-size: 14px; }
-.gate-card input[type=password] {
-  font: 400 15px/1.2 var(--font-body); color: var(--grey); background: var(--white);
-  border: 1.5px solid var(--grey-20); border-radius: 999px; padding: 10px 14px; min-height: 42px; transition: border-color .2s, box-shadow .2s;
+/* ---------- So sánh đối thủ (cùng kiểu với trang Xếp hạng app) ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chips .chips-in { display: contents; }
+.chip {
+  font: 600 14px/1 var(--font-body); border: 1.5px solid var(--grey-20); background: var(--white); color: var(--grey);
+  border-radius: 999px; padding: 8px 14px; display: inline-flex; gap: 8px; align-items: center; white-space: nowrap; min-height: 36px;
 }
-.gate-card input[type=password]:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px var(--red-10); }
-.gate-card .gate-remember { display: flex; align-items: center; gap: 8px; font-weight: 400; color: var(--muted); }
-.gate-card .gate-remember input { width: 18px; height: 18px; accent-color: var(--red); }
-.gate-err { margin: 0; color: var(--red); font-size: 14px; font-weight: 600; }
-.gate-card .btn { justify-self: start; }
-.btn-red { background: var(--red); color: var(--white); }
-.btn-red:hover:not(:disabled) { box-shadow: 0 10px 20px -10px rgba(218,33,40,.75); transform: translateY(-1px); }
-.btn:disabled { opacity: .6; cursor: progress; }
+.chip.on { color: var(--red); border-color: var(--red); background: var(--red-10); }
+.chip svg.ln { width: 18px; height: 6px; flex: none; }
+.chip-x { display: grid; place-items: center; width: 24px; height: 24px; margin: -4px -8px -4px -2px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
+.chip-x svg { width: 14px; height: 14px; fill: var(--grey); }
+.chip-x:hover { background: var(--red-10); }
+.chip-x:hover svg { fill: var(--red); }
+.cmp-wrap { position: relative; }
+.cmp-pop {
+  position: absolute; z-index: 40; top: calc(100% + 8px); left: 0; width: min(400px, calc(100vw - 32px));
+  background: var(--white); border: 1px solid var(--grey-20); border-radius: 18px; box-shadow: var(--lift); padding: 14px;
+}
+.cmp-pop input[type=search] {
+  width: 100%; font: 400 15px/1.2 var(--font-body); color: var(--grey); background: var(--white);
+  border: 1.5px solid var(--grey-20); border-radius: 999px; padding: 10px 14px; min-height: 42px;
+}
+.cmp-pop input[type=search]:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px var(--red-10); }
+.cmp-quick { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 8px; }
+.cmp-quick button { font: 600 13px/1 var(--font-body); color: var(--grey); background: var(--grey-10); border: 0; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+.cmp-quick button:hover { background: var(--red-10); color: var(--red); }
+.cmp-list { list-style: none; margin: 0; padding: 0; max-height: 300px; overflow-y: auto; }
+.cmp-list label { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 10px; cursor: pointer; font-size: 14px; }
+.cmp-list label:hover { background: var(--grey-10); }
+.cmp-list label.dis { opacity: .45; cursor: not-allowed; }
+.cmp-list input { width: 18px; height: 18px; flex: none; accent-color: var(--red); margin: 0; }
+.cmp-list .rk { width: 30px; flex: none; color: var(--grey-70); font-variant-numeric: tabular-nums; }
+.cmp-list .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cmp-list .fl { color: var(--grey-70); font-size: 13px; font-variant-numeric: tabular-nums; }
+.cmp-list .empty { padding: 10px 8px; color: var(--muted); font-size: 14px; }
+.cmp-foot { margin-top: 8px; font-size: 13px; color: var(--muted); }
+.cmp-card .chips { margin-bottom: 14px; }
+.cmp-hint { margin-top: 10px; font-size: 14px; color: var(--muted); }
+.tscroll #cmpTbl { min-width: 900px; }
+.dbar { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
+.dbar span.b { height: 8px; border-radius: 0 4px 4px 0; display: inline-block; flex: none; }
+.bank svg.ln { width: 18px; height: 6px; opacity: 1; fill: none; }
+.gap-cell small { display: block; font-size: 12px; font-weight: 400; color: var(--grey-70); }
+
+/* Chọn khoảng ngày: Từ ngày – Đến ngày + chọn nhanh */
+.range-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.daterange {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 42px; padding: 0 8px 0 14px;
+  border: 1.5px solid var(--grey-20); border-radius: 999px; background: var(--white); transition: border-color .2s, box-shadow .2s;
+}
+.daterange:focus-within { border-color: var(--red); box-shadow: 0 0 0 4px var(--red-10); }
+.daterange > svg { width: 18px; height: 18px; fill: var(--red); flex: none; margin-right: 4px; }
+/* Ngày luôn hiển thị dd/mm/yyyy (không phụ thuộc ngôn ngữ trình duyệt); bấm vào mở lịch gốc của trình duyệt */
+.dfield { position: relative; display: inline-flex; align-items: center; gap: 2px; }
+.dlab { font: 600 13px/1 var(--font-body); color: var(--grey); }
+.dbtn {
+  font: 600 15px/1.2 var(--font-body); color: var(--grey); background: none; border: 0; border-radius: 8px; padding: 8px 6px;
+  cursor: pointer; font-variant-numeric: tabular-nums; white-space: nowrap; transition: background-color .15s, color .15s;
+}
+.dbtn:hover { background: var(--red-10); color: var(--red); }
+.dbtn:focus-visible { outline: 2px solid var(--red); outline-offset: 0; }
+.dfield input { position: absolute; left: 0; right: 0; bottom: 0; height: 100%; width: 100%; opacity: 0; pointer-events: none; border: 0; padding: 0; }
+.daterange .sep { color: var(--grey-50); padding-inline: 2px; }
+/* Trình duyệt quá cũ không mở được lịch bằng nút → dùng ô ngày gốc */
+.no-picker .dbtn { display: none; }
+.no-picker .dfield input { position: static; opacity: 1; pointer-events: auto; font: 400 15px var(--font-body); color: var(--grey); background: none; width: 130px; }
 
 /* ---------- Thông báo dữ liệu mẫu ---------- */
 .demo-note { display: flex; gap: 12px; align-items: flex-start; margin-top: 16px; padding: 12px 18px; border-radius: 16px; background: var(--orange-10); border: 1px solid var(--orange-20); font-size: 14px; color: var(--grey); }
@@ -146,17 +227,17 @@ body.locked .filter-dock, body.locked main { display: none; }
 /* ---------- Chỉ số ---------- */
 main { padding-bottom: 24px; }
 .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
-.tile { position: relative; overflow: hidden; background: var(--white); border-radius: 20px; padding: 18px 20px 22px; box-shadow: var(--lift-sm); min-width: 0; }
-.tile::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--band-lr); }
+.tile { position: relative; overflow: hidden; background: var(--white); border-radius: 20px; padding: 18px 20px 20px; box-shadow: var(--lift-sm); min-width: 0; }
+.tile::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 4px; border-radius: 0 4px 4px 0; background: var(--band-up); }
 .tile .lab { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--muted); }
 .tile .lab i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
-.tile .val { font-size: 36px; font-weight: 700; line-height: 1.1; margin-top: 6px; color: var(--grey); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.tile .val { font-size: 36px; font-weight: 700; line-height: 1.1; margin-top: 6px; color: var(--grey); letter-spacing: -.01em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .tile .val small { font-size: 20px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
 .tile .sub { margin-top: 6px; font-size: 14px; color: var(--muted); }
 .tile .sub b { color: var(--grey); }
-.delta { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--grey-70); }
-.delta.up { color: var(--up); }
-.delta.down { color: var(--down); }
+.delta { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--flat); }
+.delta.up { color: var(--up); font-weight: 700; }
+.delta.down { color: var(--down); font-weight: 700; }
 
 /* ---------- Thẻ biểu đồ / bảng ---------- */
 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 16px; margin-top: 16px; }
@@ -168,33 +249,32 @@ main { padding-bottom: 24px; }
 .legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13px; color: var(--grey); margin-bottom: 8px; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 14px; height: 4px; border-radius: 2px; display: inline-block; flex: none; }
-.legend i.box { width: 10px; height: 10px; border-radius: 3px; }
+.legend svg.ln { width: 18px; height: 6px; flex: none; }
 .chart { width: 100%; position: relative; }
 .chart svg { display: block; overflow: visible; }
 .chart text { fill: var(--muted); font-size: 12px; font-family: var(--font-body); font-variant-numeric: tabular-nums; }
 .chart text.lab { fill: var(--grey); font-size: 13.5px; font-variant-numeric: normal; }
-.chart text.lab.me { font-weight: 700; }
+.chart text.lab.me { font-weight: 700; fill: var(--red); }
+.chart text.lab.hl { font-weight: 700; }
 .chart text.val { fill: var(--grey); font-size: 13px; font-weight: 600; }
 .chart text.end { font-size: 13px; font-weight: 700; fill: var(--grey); }
 .chart .hit { fill: transparent; }
 .chart .row:hover .hit, .chart .row:focus .hit { fill: var(--hover); }
 .chart .row { outline: none; }
 .chart .row:focus-visible .hit { stroke: var(--red); stroke-width: 1.5; }
-.chart .other-line { transition: stroke .15s, stroke-width .15s; }
-.chart .other-line.is-hot { stroke: var(--grey); stroke-width: 2; }
 .nodata { color: var(--muted); padding: 24px 0; }
 
 table { border-collapse: collapse; width: 100%; font-size: 14px; }
 th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--grey-10); vertical-align: middle; }
-th { color: var(--grey); font-weight: 700; font-size: 13px; background: #F7F7F7; white-space: nowrap; }
+th { color: var(--grey); font-weight: 700; font-size: 13px; background: var(--grey-10); white-space: nowrap; }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 th.sort { cursor: pointer; user-select: none; }
 th.sort::after { content: " ↕"; color: var(--grey-50); }
 th.sort.asc::after { content: " ↑"; color: var(--red); }
 th.sort.desc::after { content: " ↓"; color: var(--red); }
 th.sort:hover { color: var(--red); }
-tbody tr:hover td { background: #FDF6F6; }
-tr.me td { background: var(--red-10); font-weight: 700; }
+tbody tr:hover td { background: var(--grey-10); }
+tr.me td, tbody tr.me:hover td { background: var(--red-10); font-weight: 700; }
 .tscroll { overflow-x: auto; border: 1px solid var(--grey-20); border-radius: 16px; }
 .tscroll table { min-width: 680px; }
 .bank { display: inline-flex; align-items: center; gap: 8px; color: var(--grey); font-weight: 600; text-decoration: none; }
@@ -218,7 +298,7 @@ tr.me .rank { background: var(--red); color: var(--white); }
 #tip .r.me .k, #tip .r.me b { font-weight: 700; }
 #tip .r b { font-weight: 600; color: var(--grey); }
 
-/* ---------- Footer ---------- */
+/* ---------- Footer: logo dương bản trên nền trắng, dải màu chủ đạo ở chân trang ---------- */
 .site-footer { background: var(--white); margin-top: 40px; }
 .footer-inner { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px; padding-block: 26px; font-size: 14px; }
 .footer-inner .brand-logo { height: 30px; }
@@ -226,35 +306,45 @@ tr.me .rank { background: var(--red); color: var(--white); }
 .footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 20px; }
 .footer-links a { color: var(--grey); font-weight: 600; text-decoration: none; }
 .footer-links a:hover { color: var(--red); text-decoration: underline; }
-.footer-band { height: 8px; background: var(--band-lr); }
+.footer-band { height: 12px; background: var(--band-up); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 760px) {
-  .header-inner { min-height: 60px; gap: 10px; }
-  .brand { gap: 10px; padding-block: 12px; }
-  .brand-logo { height: 26px; }
+  .header-inner { min-height: 60px; gap: 12px; }
+  .brand { padding-block: 14px; }
+  .brand-logo { height: 28px; }
   .brand-name { display: none; }
   .nav { gap: 2px; }
   .nav a { padding: 7px 8px; font-size: 14px; }
   .nav .long { display: none; }
   .nav .short { display: inline; }
   .hero::after { width: 72%; opacity: .9; background-image: url("assets/kite-sm.jpg"); }
-  .hero-inner { grid-template-columns: 1fr; padding-block: 28px 92px; gap: 14px; }
+  .hero-inner { grid-template-columns: 1fr; padding-block: 28px 100px; gap: 14px; }
   .hero-icon { --s: 52px; }
   .hero-lead { font-size: 16px; }
-  .filter-dock { margin-top: -60px; }
+  .filter-dock, .gate { margin-top: -68px; }
   .filters { padding: 16px; gap: 14px; border-radius: 20px; }
   .f-group, .f-group select { width: 100%; }
-  .f-actions { margin-left: 0; width: 100%; }
-  .f-actions .btn { width: 100%; }
+  .range-row { flex-direction: column; align-items: stretch; }
+  .daterange { width: 100%; }
+  .daterange .dfield { flex: 1 1 0; min-width: 0; }
+  .daterange .dbtn { flex: 1 1 auto; text-align: left; }
+  .range-row .seg { justify-content: space-between; }
+  .range-row .seg button { flex: 1 1 auto; justify-content: center; }
   .kpis { gap: 12px; }
-  .tile { padding: 14px 16px 18px; }
+  .tile { padding: 14px 16px 16px; }
   .tile .val { font-size: 28px; }
   .tile .val small { font-size: 16px; }
   .card { padding: 18px 16px 16px; border-radius: 20px; }
 }
-@media (max-width: 420px) { .kpis { grid-template-columns: 1fr; } }
+@media (max-width: 420px) {
+  .kpis { grid-template-columns: 1fr; }
+  .daterange > svg { display: none; }
+  .daterange { padding-inline: 12px 6px; gap: 2px; }
+  .dbtn { font-size: 14px; padding-inline: 4px; }
+  .range-row .seg.sm button { padding: 0 8px; }
+}
 @media (forced-colors: active) { .legend i, .bank i, .tile .lab i { forced-color-adjust: none; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
 </style>
@@ -272,19 +362,22 @@ tr.me .rank { background: var(--red); color: var(--white); }
   <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 3h7v7h-2.4V7.1l-8.2 8.2-1.7-1.7 8.2-8.2H14zM5 5h6v2.4H7.4v9.2h9.2V13H19v6H5z"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm-1.2 8.5V17h2.4v-6.5zm1.2-4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M10.8 3h2.4v9.2l3.6-3.6 1.7 1.7L12 16.8l-6.5-6.5 1.7-1.7 3.6 3.6zM4 18.6h16V21H4z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M10.8 4h2.4v6.8H20v2.4h-6.8V20h-2.4v-6.8H4v-2.4h6.8z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.4 5L12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6 10.6 12 5 6.4z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path d="M7 2h2.4v2h5.2V2H17v2h2.5A1.5 1.5 0 0 1 21 5.5v14a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19.5v-14A1.5 1.5 0 0 1 4.5 4H7zM5.4 9.5v9.1h13.2V9.5zM7.5 11.5h3v3h-3z"/></symbol>
 </svg>
 
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href="/" aria-label="HDB Digital Hub, về trang chủ">
-      <!-- Logo gốc của HDBank, không vẽ lại / chỉnh sửa -->
+      <!-- Logo gốc của HDBank, không vẽ lại / chỉnh sửa / tạo bóng -->
       <img class="brand-logo" src="assets/logo.png" alt="HDBank" width="113" height="30">
       <span class="brand-name">Digital Hub</span>
     </a>
     <nav class="nav" aria-label="Công cụ">
       <a href="/ggmap-dashboard/">Đánh giá<span class="long"> Google Maps</span></a>
       <a href="/app-ranking/"><span class="long">Xếp hạng app</span><span class="short">Xếp hạng</span></a>
-      <a href="/social-follower/" aria-current="page"><span class="long">Follower đối thủ</span><span class="short">Follower</span></a>
+      <a href="/social-follower/" aria-current="page"><span class="long">Follower tracking</span><span class="short">Follower</span></a>
       <a href="/ggmap-qrcode/"><span class="long">Tạo mã QR</span><span class="short">Mã QR</span></a>
       <a href="/bang-ten/"><span class="long">Tạo bảng tên</span><span class="short">Bảng tên</span></a>
     </nav>
@@ -295,8 +388,8 @@ tr.me .rank { background: var(--red); color: var(--white); }
   <div class="wrap hero-inner">
     <span class="icon1 hero-icon" aria-hidden="true"><svg><use href="#g-follow"/></svg></span>
     <div>
-      <h1 id="page-title">Follower đối thủ</h1>
-      <p class="hero-lead">So sánh lượng người theo dõi Facebook và TikTok của HDBank với các ngân hàng khác.</p>
+      <h1 id="page-title">Follower tracking</h1>
+      <p class="hero-lead">Theo dõi và so sánh lượng người theo dõi Facebook, TikTok của HDBank với các ngân hàng khác.</p>
       <ul class="hero-meta" id="heroMeta" aria-live="polite"><li>Đang tải dữ liệu…</li></ul>
     </div>
   </div>
@@ -326,21 +419,23 @@ tr.me .rank { background: var(--red); color: var(--white); }
           <button type="button" data-v="tiktok" aria-pressed="false"><svg aria-hidden="true"><use href="#i-tt"/></svg>TikTok</button>
         </div>
       </div>
-      <div class="f-group">
-        <span id="lb-range">Khoảng thời gian</span>
-        <div class="seg" id="segRange" role="group" aria-labelledby="lb-range">
-          <button type="button" data-v="7" aria-pressed="false">1 tuần</button>
-          <button type="button" data-v="30" aria-pressed="true">1 tháng</button>
-          <button type="button" data-v="90" aria-pressed="false">3 tháng</button>
-          <button type="button" data-v="0" aria-pressed="false">Toàn bộ</button>
+      <fieldset class="f-group f-range">
+        <legend>Khoảng thời gian</legend>
+        <div class="range-row">
+          <div class="daterange">
+            <svg aria-hidden="true"><use href="#i-cal"/></svg>
+            <span class="dfield"><span class="dlab" aria-hidden="true">Từ</span><button type="button" class="dbtn" id="bFrom" data-for="dFrom">—</button><input type="date" id="dFrom" aria-label="Từ ngày"></span>
+            <span class="sep" aria-hidden="true">–</span>
+            <span class="dfield"><span class="dlab" aria-hidden="true">Đến</span><button type="button" class="dbtn" id="bTo" data-for="dTo">—</button><input type="date" id="dTo" aria-label="Đến ngày"></span>
+          </div>
+          <div class="seg sm" id="segQuick" role="group" aria-label="Chọn nhanh khoảng thời gian">
+            <button type="button" data-v="7" aria-pressed="false">7 ngày</button>
+            <button type="button" data-v="30" aria-pressed="true">30 ngày</button>
+            <button type="button" data-v="90" aria-pressed="false">90 ngày</button>
+            <button type="button" data-v="0" aria-pressed="false">Toàn bộ</button>
+          </div>
         </div>
-      </div>
-      <label class="f-group f-cmp">So sánh HDBank với
-        <select id="cmpSel"></select>
-      </label>
-      <div class="f-actions">
-        <button type="button" class="btn btn-outline" id="btnCsv"><svg aria-hidden="true"><use href="#i-download"/></svg>Tải CSV</button>
-      </div>
+      </fieldset>
     </div>
   </div>
 </div>
@@ -352,6 +447,32 @@ tr.me .rank { background: var(--red); color: var(--white); }
   </p>
 
   <section class="kpis" id="kpis" aria-live="polite" aria-label="Chỉ số chính của HDBank"></section>
+
+  <section class="card cmp-card" aria-labelledby="h-cmp">
+    <header class="card-head">
+      <h2 id="h-cmp">So sánh với đối thủ</h2>
+      <p class="desc" id="cmpDesc"></p>
+    </header>
+    <div class="chips">
+      <span class="chips-in" id="cmpChips"></span>
+      <span class="cmp-wrap">
+        <button type="button" class="btn btn-outline btn-sm" id="cmpBtn" aria-expanded="false" aria-controls="cmpPop"><svg aria-hidden="true"><use href="#i-plus"/></svg><span id="cmpBtnTxt">Chọn đối thủ</span></button>
+        <div class="cmp-pop" id="cmpPop" role="dialog" aria-label="Chọn đối thủ để so sánh" hidden>
+          <input type="search" id="cmpSearch" placeholder="Tìm ngân hàng…" autocomplete="off" aria-label="Tìm ngân hàng">
+          <div class="cmp-quick">
+            <button type="button" data-q="near">Sát hạng HDBank</button>
+            <button type="button" data-q="top">Top 5 follower</button>
+            <button type="button" data-q="gain">Tăng nhiều nhất</button>
+            <button type="button" data-q="none">Bỏ chọn hết</button>
+          </div>
+          <ul class="cmp-list" id="cmpList"></ul>
+          <p class="cmp-foot" id="cmpFoot"></p>
+        </div>
+      </span>
+    </div>
+    <div class="tscroll"><table id="cmpTbl"></table></div>
+    <p class="cmp-hint" id="cmpHint" hidden>Bấm “Chọn đối thủ” để thêm tối đa 5 ngân hàng vào bảng so sánh.</p>
+  </section>
 
   <div class="grid2">
     <section class="card" aria-labelledby="h-rank">
@@ -386,6 +507,7 @@ tr.me .rank { background: var(--red); color: var(--white); }
   <section class="card" aria-labelledby="h-table">
     <header class="card-head">
       <h2 id="h-table">Bảng chi tiết</h2>
+      <button type="button" class="btn btn-outline btn-sm" id="btnCsv"><svg aria-hidden="true"><use href="#i-download"/></svg>Tải CSV</button>
       <p class="desc" id="tableDesc"></p>
     </header>
     <div class="tscroll"><table id="tbl"></table></div>
@@ -397,8 +519,8 @@ tr.me .rank { background: var(--red); color: var(--white); }
       <h2 id="h-src">Về nguồn dữ liệu</h2>
       <ul>
         <li><b>Facebook:</b> số người theo dõi chính xác của từng Fanpage công khai, cập nhật hằng ngày lúc 9:00.</li>
-        <li><b>TikTok:</b> số follower chính xác của từng kênh, lấy qua dịch vụ Apify, cập nhật lúc 9:00 thứ 2 và thứ 5 hằng tuần.</li>
-        <li>“Tăng thêm trong kỳ” = số mới nhất trừ số của lần cập nhật đầu tiên trong khoảng thời gian đang xem.</li>
+        <li><b>TikTok:</b> số follower chính xác của từng kênh, lấy qua dịch vụ Apify, cập nhật lúc 9:00 thứ Hai và thứ Năm hằng tuần. Với TikTok, nên chọn khoảng từ 7 ngày trở lên để có ít nhất 2 lần cập nhật.</li>
+        <li>“Tăng thêm trong kỳ” = số của lần cập nhật cuối cùng trong khoảng ngày đã chọn trừ số của lần cập nhật đầu tiên trong khoảng đó.</li>
       </ul>
     </div>
   </aside>
@@ -424,9 +546,13 @@ const nf = new Intl.NumberFormat("vi-VN");
 const pf = new Intl.NumberFormat("vi-VN", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const SVGNS = "http://www.w3.org/2000/svg";
 const DAY = 86400000;
-let DATA = null;
+let DATA = null; // nạp từ data.json (đã mã hóa) sau khi nhập đúng mật khẩu
+const PRESETS = [7, 30, 90, 0];
+const ISO = /^\d{4}-\d{2}-\d{2}$/;
 
-const state = { plat: "facebook", range: 30, cmp: null, mode: "gain", sortKey: "value", sortDir: -1 };
+// preset: số ngày của nút chọn nhanh (0 = toàn bộ) hoặc null khi người dùng tự chọn ngày
+// cmp: danh sách key đối thủ đang so sánh của nền tảng hiện tại (null = chưa khởi tạo cho nền tảng này)
+const state = { plat: "facebook", preset: 30, from: null, to: null, cmp: null, mode: "gain", sortKey: "value", sortDir: -1 };
 
 /* ---------- Tiện ích DOM (mọi chuỗi dữ liệu đi qua textContent) ---------- */
 function el(tag, attrs, ...kids) {
@@ -456,43 +582,123 @@ function delta(v, fmt = signed) {
   const arrow = v > 0 ? "▲ " : v < 0 ? "▼ " : "";
   return el("span", { class: "delta" + cls }, arrow + fmt(v));
 }
-const colorOf = (a) => a.me ? "var(--c-me)" : a.key === state.cmp ? "var(--c-cmp)" : "var(--c-other)";
+/* ---------- Đối thủ so sánh: tối đa 5, mỗi đối thủ một màu + kiểu nét (giống trang Xếp hạng app) ---------- */
+const MAX_CMP = 5;
+const CMP_STYLES = [
+  { c: "var(--c1)", dash: [] },             // xám HDBank, nét liền
+  { c: "var(--c2)", dash: [6, 4] },         // cam, nét đứt
+  { c: "var(--c3)", dash: [2, 3] },         // xám 70%, chấm
+  { c: "var(--c4)", dash: [10, 3, 2, 3] },  // cam vàng, gạch-chấm
+  { c: "var(--c5)", dash: [12, 5] },        // xám, gạch dài
+];
+const store = {
+  get(k, d) { try { return localStorage.getItem("hdbf_" + k) ?? d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("hdbf_" + k, v); } catch (e) { /* bỏ qua */ } },
+};
+const cmpIdx = (k) => state.cmp ? state.cmp.indexOf(k) : -1;
+const isHl = (a) => a.me || cmpIdx(a.key) >= 0;
+const styleOf = (a) => a.me ? { c: "var(--c-me)", dash: [] } : CMP_STYLES[cmpIdx(a.key)] || null;
+const colorOf = (a) => (styleOf(a) || { c: "var(--c-other)" }).c;
+function lineSwatch(st, w = 3) {
+  const s = sv("svg", { class: "ln", viewBox: "0 0 18 6", "aria-hidden": "true" });
+  s.append(sv("line", { x1: 0, y1: 3, x2: 18, y2: 3, stroke: st.c, "stroke-width": w, "stroke-dasharray": st.dash.join(" ") || null }));
+  return s;
+}
 
-/* ---------- Tính toán theo nền tảng + khoảng thời gian ---------- */
+/* ---------- Khoảng ngày ---------- */
+// Ngày đầu tiên / cuối cùng có số liệu của nền tảng
+function bounds(plat = state.plat) {
+  let min = null, max = null;
+  for (const a of DATA.platforms[plat].accounts) for (const [d] of a.points) {
+    if (!min || d < min) min = d;
+    if (!max || d > max) max = d;
+  }
+  return { min, max };
+}
+const clampD = (d, b) => d < b.min ? b.min : d > b.max ? b.max : d;
+// Chọn nhanh: tính khoảng ngày tính lùi từ ngày cập nhật mới nhất
+function applyPreset() {
+  const b = bounds(); if (!b.max) return;
+  state.to = b.max;
+  state.from = state.preset ? clampD(ms2d(t2ms(b.max) - state.preset * DAY), b) : b.min;
+}
+// Tự chọn ngày: kẹp vào khoảng có số liệu, đảo lại nếu "từ" sau "đến"
+function normalizeRange() {
+  const b = bounds(); if (!b.max) return;
+  if (state.preset != null) { applyPreset(); return; }
+  state.from = clampD(state.from && ISO.test(state.from) ? state.from : b.min, b);
+  state.to = clampD(state.to && ISO.test(state.to) ? state.to : b.max, b);
+  if (state.from > state.to) [state.from, state.to] = [state.to, state.from];
+}
+function syncRangeUI() {
+  const b = bounds();
+  for (const inp of [$("dFrom"), $("dTo")]) { inp.min = b.min || ""; inp.max = b.max || ""; }
+  $("dFrom").value = state.from || ""; $("dTo").value = state.to || "";
+  for (const [b, lab, v] of [["bFrom", "Từ ngày", state.from], ["bTo", "Đến ngày", state.to]]) {
+    $(b).textContent = v ? dmy(v) : "—";
+    $(b).setAttribute("aria-label", `${lab} ${v ? dmy(v) : "chưa chọn"}, bấm để đổi ngày`);
+  }
+  for (const btn of $("segQuick").querySelectorAll("button")) btn.setAttribute("aria-pressed", String(Number(btn.dataset.v) === state.preset));
+}
+function periodText() {
+  if (!state.from) return "khoảng thời gian đã chọn";
+  const r = `${dmy(state.from)} – ${dmy(state.to)}`;
+  return state.preset === 0 ? `toàn bộ thời gian theo dõi (${r})` : state.preset ? `${state.preset} ngày gần nhất (${r})` : `khoảng ${r}`;
+}
+// Ghi bộ lọc lên URL để gửi link đúng kỳ đang xem cho người khác
+function writeHash() {
+  const q = new URLSearchParams({ p: state.plat });
+  if (state.preset != null) q.set("r", state.preset); else { q.set("from", state.from); q.set("to", state.to); }
+  if (state.cmp && state.cmp.length) q.set("cmp", state.cmp.join(","));
+  history.replaceState(null, "", "#" + q.toString().replace(/%2C/g, ","));
+}
+function readHash() {
+  const h = location.hash.slice(1); if (!h) return;
+  const q = new URLSearchParams(h.includes("=") ? h : "p=" + h); // vẫn hiểu link cũ dạng #tiktok
+  if (DATA.platforms[q.get("p")]) state.plat = q.get("p");
+  const r = Number(q.get("r"));
+  if (q.has("r") && PRESETS.includes(r)) state.preset = r;
+  else if (ISO.test(q.get("from") || "") && ISO.test(q.get("to") || "")) { state.preset = null; state.from = q.get("from"); state.to = q.get("to"); }
+  if (q.has("cmp")) hashCmp = { plat: state.plat, keys: q.get("cmp").split(",").filter(Boolean) };
+}
+
+/* ---------- Tính toán theo nền tảng + khoảng ngày ---------- */
 function compute() {
   const P = DATA.platforms[state.plat];
-  const accs = P.accounts.filter((a) => a.points.length);
-  const last = accs.reduce((m, a) => Math.max(m, t2ms(a.points.at(-1)[0])), 0);
-  const start = state.range ? last - state.range * DAY : -Infinity;
-  const rows = accs.map((a) => {
-    const pts = a.points.filter(([d]) => t2ms(d) >= start);
-    const cur = a.points.at(-1), prev = a.points.at(-2);
-    const base = pts.length > 1 ? pts[0] : null;
+  const f = t2ms(state.from), t = t2ms(state.to);
+  const rows = [];
+  for (const a of P.accounts) {
+    const upto = a.points.filter(([d]) => t2ms(d) <= t);
+    if (!upto.length) continue;
+    const pts = upto.filter(([d]) => t2ms(d) >= f);
+    const cur = upto.at(-1), prev = upto.at(-2);          // số tại lần cập nhật cuối cùng tính đến ngày "Đến"
+    const base = pts.length > 1 ? pts[0] : null;          // lần cập nhật đầu tiên trong khoảng
     const gain = base ? cur[1] - base[1] : null;
-    return {
+    rows.push({
       ...a, pts, value: cur[1], date: cur[0],
-      base, gain, gainPct: base ? gain / base[1] : null,
+      base, gain, gainPct: base && base[1] ? gain / base[1] : null,
       prevDelta: prev ? cur[1] - prev[1] : null, prevDate: prev ? prev[0] : null,
-    };
-  });
+    });
+  }
   const rankBy = (k) => [...rows].sort((x, y) => (y[k] ?? -Infinity) - (x[k] ?? -Infinity));
   rankBy("value").forEach((r, i) => (r.rank = i + 1));
   rankBy("gain").forEach((r, i) => (r.gainRank = r.gain == null ? null : i + 1));
   // Hạng ở đầu kỳ (theo số đầu kỳ) để biết HDBank lên/xuống hạng
-  const withBase = rows.filter((r) => r.base);
-  [...withBase].sort((x, y) => y.base[1] - x.base[1]).forEach((r, i) => (r.baseRank = i + 1));
-  const firstDate = rows.reduce((m, r) => (r.base && (!m || r.base[0] < m) ? r.base[0] : m), null);
-  return { P, rows, last: ms2d(last), firstDate };
+  [...rows.filter((r) => r.base)].sort((x, y) => y.base[1] - x.base[1]).forEach((r, i) => (r.baseRank = i + 1));
+  const last = rows.reduce((m, r) => (!m || r.date > m ? r.date : m), null);
+  return { P, rows, last };
 }
 
 /* ---------- Hero + chỉ số ---------- */
 function renderHero() {
   const meta = $("heroMeta"); meta.replaceChildren();
-  for (const [k, P] of Object.entries(DATA.platforms)) {
-    const last = P.accounts.flatMap((a) => a.points.map((p) => p[0])).sort().at(-1);
+  let n = 0;
+  for (const k of Object.keys(DATA.platforms)) {
+    const P = DATA.platforms[k], last = bounds(k).max;
+    n += P.accounts.length;
     meta.append(el("li", null, `${P.label}: cập nhật ${last ? dmy(last) : "—"} · ${P.cadence.toLowerCase()}`));
   }
-  meta.append(el("li", null, `${DATA.platforms.facebook.accounts.length + DATA.platforms.tiktok.accounts.length} tài khoản theo dõi`));
+  meta.append(el("li", null, `${n} tài khoản theo dõi`));
 }
 
 function tile(label, val, sub, dot) {
@@ -504,12 +710,12 @@ function tile(label, val, sub, dot) {
 function renderKpis(C) {
   const box = $("kpis"); box.replaceChildren();
   const me = C.rows.find((r) => r.me);
-  if (!me) { box.append(el("p", { class: "nodata" }, "Chưa có số liệu HDBank.")); return; }
+  if (!me) { box.append(el("p", { class: "nodata" }, "Chưa có số liệu HDBank trong khoảng ngày này.")); return; }
   const byRank = [...C.rows].sort((a, b) => a.rank - b.rank);
   const above = byRank[me.rank - 2];
   const n = C.rows.length;
 
-  box.append(tile("Follower HDBank", nf.format(me.value),
+  box.append(tile(`Follower HDBank · ${dmy(me.date)}`, nf.format(me.value),
     [delta(me.prevDelta), me.prevDate ? ` so với ${dmy(me.prevDate)}` : " (lần cập nhật đầu tiên)"], "var(--c-me)"));
 
   const rankVal = el("span", null, "#" + me.rank, el("small", null, " / " + n));
@@ -521,12 +727,12 @@ function renderKpis(C) {
   box.append(tile("Xếp hạng", rankVal, rankSub));
 
   box.append(tile("HDBank tăng thêm trong kỳ", me.gain == null ? "—" : signed(me.gain),
-    me.gain == null ? "Chưa đủ số liệu cho kỳ này"
+    me.gain == null ? "Cần ít nhất 2 lần cập nhật trong khoảng ngày này"
       : [delta(me.gainPct, signedPct), me.gainRank ? ` · hạng ${me.gainRank}/${n} về số tăng` : ""]));
 
   const lead = [...C.rows].filter((r) => r.gain != null).sort((a, b) => b.gain - a.gain)[0];
   box.append(tile("Tăng nhiều nhất trong kỳ", lead ? lead.name : "—",
-    lead ? [el("b", null, signed(lead.gain)), " follower · ", signedPct(lead.gainPct)] : "Chưa đủ số liệu cho kỳ này",
+    lead ? [el("b", null, signed(lead.gain)), " follower · ", signedPct(lead.gainPct)] : "Cần ít nhất 2 lần cập nhật trong khoảng ngày này",
     lead ? colorOf(lead) : null));
 }
 
@@ -534,8 +740,8 @@ function renderKpis(C) {
 function barChart(host, rows, key, fmt, tipRows) {
   host.replaceChildren();
   const data = rows.filter((r) => r[key] != null).sort((a, b) => b[key] - a[key]);
-  if (!data.length) { host.append(el("p", { class: "nodata" }, "Chưa đủ số liệu cho khoảng thời gian này.")); return; }
-  const W = Math.max(280, host.clientWidth), rowH = 32, barH = 18, labW = Math.min(120, W * 0.3), valW = 86;
+  if (!data.length) { host.append(el("p", { class: "nodata" }, "Cần ít nhất 2 lần cập nhật trong khoảng ngày này. Hãy chọn khoảng dài hơn.")); return; }
+  const W = Math.max(240, host.clientWidth), rowH = 32, barH = 18, labW = Math.min(120, W * 0.3), valW = 86;
   const H = data.length * rowH;
   const min = Math.min(0, ...data.map((d) => d[key])), max = Math.max(0, ...data.map((d) => d[key]));
   const x = (v) => labW + ((v - min) / (max - min || 1)) * (W - labW - valW);
@@ -544,7 +750,7 @@ function barChart(host, rows, key, fmt, tipRows) {
     const y = i * rowH, x0 = x(Math.min(0, d[key])), x1 = x(Math.max(0, d[key]));
     const g = sv("g", { class: "row", tabindex: "0" });
     g.append(sv("rect", { class: "hit", x: 0, y, width: W, height: rowH, rx: 8 }));
-    g.append(sv("text", { class: "lab" + (d.me ? " me" : ""), x: labW - 10, y: y + rowH / 2 + 5, "text-anchor": "end" }, d.name));
+    g.append(sv("text", { class: "lab" + (d.me ? " me" : isHl(d) ? " hl" : ""), x: labW - 10, y: y + rowH / 2 + 5, "text-anchor": "end" }, d.name));
     const w = Math.max(2, x1 - x0), yb = y + (rowH - barH) / 2;
     // Đầu thanh bo 4px, gốc thanh vuông (bám trục 0)
     const neg = d[key] < 0, r = Math.min(4, w / 2);
@@ -583,9 +789,9 @@ function lineChart(C) {
   const host = $("chTrend"); host.replaceChildren();
   const val = (r, p) => state.mode === "gain" ? p[1] - r.pts[0][1] : p[1];
   const series = C.rows.filter((r) => r.pts.length > 1);
-  if (!series.length) { host.append(el("p", { class: "nodata" }, "Cần ít nhất 2 lần cập nhật trong khoảng thời gian này để vẽ diễn biến.")); return; }
+  if (!series.length) { host.append(el("p", { class: "nodata" }, "Cần ít nhất 2 lần cập nhật trong khoảng ngày này để vẽ diễn biến. Hãy chọn khoảng dài hơn.")); return; }
   const dates = [...new Set(series.flatMap((r) => r.pts.map((p) => p[0])))].sort();
-  const W = Math.max(300, host.clientWidth), H = W < 560 ? 280 : 340, m = { t: 12, r: W < 560 ? 76 : 104, b: 30, l: 56 };
+  const W = Math.max(240, host.clientWidth), H = W < 560 ? 280 : 340, m = { t: 12, r: W < 560 ? 76 : 104, b: 30, l: 56 };
   const all = series.flatMap((r) => r.pts.map((p) => val(r, p)));
   // Chế độ "tăng thêm": trục luôn chứa 0 (đường gốc của kỳ)
   const ticks = niceTicks(state.mode === "gain" ? Math.min(0, ...all) : Math.min(...all), Math.max(...all));
@@ -604,18 +810,17 @@ function lineChart(C) {
   const step = Math.max(1, Math.round((dates.length - 1) / (nx - 1)));
   for (let i = 0; i < dates.length; i += step) svg.append(sv("text", { x: x(dates[i]), y: H - 8, "text-anchor": "middle" }, dm(dates[i])));
 
-  // Thứ tự vẽ: ngân hàng khác (xám) → ngân hàng so sánh (cam) → HDBank (đỏ) trên cùng
-  const order = [...series].sort((a, b) => (a.me ? 2 : a.key === state.cmp ? 1 : 0) - (b.me ? 2 : b.key === state.cmp ? 1 : 0));
-  const lines = new Map();
+  // Thứ tự vẽ: ngân hàng khác (xám nhạt) → đối thủ đang so sánh → HDBank (đỏ) trên cùng
+  const z = (r) => r.me ? 9 : cmpIdx(r.key) >= 0 ? 8 - cmpIdx(r.key) : 0;
+  const order = [...series].sort((a, b) => z(a) - z(b));
   for (const r of order) {
-    const hl = r.me || r.key === state.cmp;
+    const st = styleOf(r);
     const d = r.pts.map((p, i) => (i ? "L" : "M") + x(p[0]).toFixed(1) + "," + y(val(r, p)).toFixed(1)).join("");
-    const path = sv("path", { d, fill: "none", stroke: colorOf(r), "stroke-width": r.me ? 2.5 : hl ? 2 : 1.5,
-      "stroke-linejoin": "round", "stroke-linecap": "round", class: hl ? "" : "other-line" });
-    svg.append(path); lines.set(r.key, path);
+    svg.append(sv("path", { d, fill: "none", stroke: st ? st.c : "var(--grey-30)", "stroke-width": r.me ? 2.75 : st ? 2.25 : 1.25,
+      "stroke-dasharray": st && st.dash.length ? st.dash.join(" ") : null, "stroke-linejoin": "round", "stroke-linecap": st && st.dash.length ? "butt" : "round" }));
   }
-  // Nhãn trực tiếp ở cuối đường cho HDBank và ngân hàng so sánh (giãn ra nếu chồng nhau)
-  const labs = order.filter((r) => r.me || r.key === state.cmp)
+  // Nhãn trực tiếp ở cuối đường cho HDBank và các đối thủ đang so sánh (giãn ra nếu chồng nhau)
+  const labs = order.filter(isHl)
     .map((r) => ({ r, y: y(val(r, r.pts.at(-1))) })).sort((a, b) => a.y - b.y);
   for (let i = 1; i < labs.length; i++) if (labs[i].y - labs[i - 1].y < 16) labs[i].y = labs[i - 1].y + 16;
   for (const { r, y: ly } of labs) {
@@ -637,10 +842,10 @@ function lineChart(C) {
     dots.replaceChildren(); dots.setAttribute("visibility", "visible");
     const at = series.map((r) => ({ r, p: r.pts.find((p) => p[0] === d) })).filter((o) => o.p)
       .map((o) => ({ ...o, v: val(o.r, o.p) })).sort((a, b) => b.v - a.v);
-    for (const o of at) if (o.r.me || o.r.key === state.cmp)
+    for (const o of at) if (isHl(o.r))
       dots.append(sv("circle", { cx: x(d), cy: y(o.v), r: 4.5, fill: colorOf(o.r), stroke: "#fff", "stroke-width": 2 }));
     tip(e, dmy(d) + (state.mode === "gain" ? " · tăng thêm từ đầu kỳ" : " · tổng follower"),
-      at.map((o) => ({ k: o.r.name, v: state.mode === "gain" ? signed(o.v) : nf.format(o.v), c: colorOf(o.r), me: o.r.me })));
+      at.map((o) => ({ k: o.r.name, v: state.mode === "gain" ? signed(o.v) : nf.format(o.v), c: isHl(o.r) ? colorOf(o.r) : "var(--grey-30)", me: o.r.me })));
   };
   hit.addEventListener("mousemove", move);
   hit.addEventListener("mouseleave", () => { cross.setAttribute("visibility", "hidden"); dots.setAttribute("visibility", "hidden"); hideTip(); });
@@ -649,10 +854,12 @@ function lineChart(C) {
 
 function renderLegend(C) {
   const lg = $("trendLegend"); lg.replaceChildren();
-  const cmp = C.rows.find((r) => r.key === state.cmp);
-  lg.append(el("span", null, el("i", { style: "background:var(--c-me)" }), "HDBank"));
-  if (cmp) lg.append(el("span", null, el("i", { style: "background:var(--c-cmp)" }), cmp.name));
-  lg.append(el("span", null, el("i", { style: "background:var(--c-other)" }), "Ngân hàng khác (rê chuột để xem số)"));
+  lg.append(el("span", null, lineSwatch({ c: "var(--c-me)", dash: [] }, 4), "HDBank"));
+  for (const k of state.cmp || []) {
+    const r = C.rows.find((x) => x.key === k);
+    if (r) lg.append(el("span", null, lineSwatch(styleOf(r)), r.name));
+  }
+  lg.append(el("span", null, lineSwatch({ c: "var(--grey-30)", dash: [] }, 2), "Ngân hàng khác (rê chuột để xem số)"));
 }
 
 /* ---------- Bảng ---------- */
@@ -687,7 +894,7 @@ function renderTable(C) {
       el("td", null, el("span", { class: "rank" }, r.rank)),
       el("td", null, el("a", { class: "bank", href: r.url, target: "_blank", rel: "noopener" },
         el("i", { style: `background:${colorOf(r)}` }), r.name, icon("i-out"))),
-      el("td", { class: "num" }, nf.format(r.value)),
+      el("td", { class: "num", title: "Cập nhật " + dmy(r.date) }, nf.format(r.value)),
       el("td", { class: "num" }, delta(r.gain)),
       el("td", { class: "num" }, delta(r.gainPct, signedPct)),
       el("td", { class: "num", title: r.prevDate ? "So với " + dmy(r.prevDate) : "" }, delta(r.prevDelta))));
@@ -714,39 +921,156 @@ function hideTip() { tipEl.hidden = true; }
 /* ---------- CSV ---------- */
 function downloadCsv() {
   const C = compute();
-  const head = ["Nền tảng", "Hạng", "Ngân hàng", "Link", "Follower", "Ngày cập nhật", "Đầu kỳ (ngày)", "Đầu kỳ (follower)", "Tăng thêm trong kỳ", "% trong kỳ"];
+  const head = ["Nền tảng", "Từ ngày", "Đến ngày", "Hạng", "Ngân hàng", "Link", "Follower", "Ngày cập nhật", "Đầu kỳ (ngày)", "Đầu kỳ (follower)", "Tăng thêm trong kỳ", "% trong kỳ"];
   const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const lines = [head.map(q).join(",")];
   for (const r of [...C.rows].sort((a, b) => a.rank - b.rank))
-    lines.push([C.P.label, r.rank, r.name, r.url, r.value, r.date, r.base?.[0], r.base?.[1], r.gain, r.gainPct == null ? "" : (r.gainPct * 100).toFixed(2) + "%"].map(q).join(","));
-  const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
-  const a = el("a", { href: URL.createObjectURL(blob), download: `follower_${state.plat}_${C.last}.csv` });
+    lines.push([C.P.label, state.from, state.to, r.rank, r.name, r.url, r.value, r.date, r.base?.[0], r.base?.[1], r.gain,
+      r.gainPct == null ? "" : (r.gainPct * 100).toFixed(2) + "%"].map(q).join(","));
+  const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" }); // BOM để Excel đọc đúng tiếng Việt
+  const url = URL.createObjectURL(blob);
+  const a = el("a", { href: url, download: `follower_${state.plat}_${state.from}_${state.to}.csv` });
   document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* ---------- So sánh đối thủ: chip + bảng chọn (tối đa 5) + bảng so sánh ---------- */
+let cmpOpen = false, cmpQuery = "", hashCmp = null, lastC = null;
+// Mặc định: ngân hàng xếp ngay trên và ngay dưới HDBank theo số follower
+function nearHd(C) {
+  const byRank = [...C.rows].sort((a, b) => a.rank - b.rank);
+  const i = byRank.findIndex((r) => r.me);
+  if (i < 0) return byRank.slice(0, 2).map((r) => r.key);
+  const picks = [byRank[i - 1], byRank[i + 1]].filter(Boolean);
+  for (let d = 2; picks.length < 2 && d < byRank.length; d++) for (const r of [byRank[i - d], byRank[i + d]]) if (r && picks.length < 2) picks.push(r);
+  return picks.map((r) => r.key);
+}
+function quickPick(q, C) {
+  const others = C.rows.filter((r) => !r.me);
+  if (q === "none") return [];
+  if (q === "near") return nearHd(C);
+  if (q === "top") return [...others].sort((a, b) => a.rank - b.rank).slice(0, MAX_CMP).map((r) => r.key);
+  return others.filter((r) => r.gain != null).sort((a, b) => b.gain - a.gain).slice(0, MAX_CMP).map((r) => r.key); // "gain"
+}
+function ensureCmp(C) {
+  if (state.cmp) return;
+  const valid = new Set(DATA.platforms[state.plat].accounts.filter((a) => !a.me).map((a) => a.key));
+  const clean = (arr) => [...new Set(arr)].filter((k) => valid.has(k)).slice(0, MAX_CMP);
+  if (hashCmp && hashCmp.plat === state.plat) { state.cmp = clean(hashCmp.keys); hashCmp = null; return; }
+  let saved = null;
+  try { saved = JSON.parse(store.get("cmp_" + state.plat, "null")); } catch (e) { saved = null; }
+  state.cmp = Array.isArray(saved) ? clean(saved) : nearHd(C);
+}
+function setCompare(list) {
+  state.cmp = [...new Set(list)].slice(0, MAX_CMP);
+  store.set("cmp_" + state.plat, JSON.stringify(state.cmp));
+  render();
+}
+
+function renderCompare(C) {
+  lastC = C;
+  const n = state.cmp.length;
+  $("cmpDesc").textContent = `Chọn tối đa ${MAX_CMP} đối thủ; mỗi đối thủ có màu và kiểu nét riêng trên mọi biểu đồ. Kỳ đang xem: ${periodText()}.`;
+  const chips = [el("span", { class: "chip on" }, lineSwatch({ c: "var(--c-me)", dash: [] }, 4), "HDBank")];
+  for (const k of state.cmp) {
+    const r = C.rows.find((x) => x.key === k);
+    const name = r ? r.name : (DATA.platforms[state.plat].accounts.find((a) => a.key === k) || {}).name || k;
+    const x = el("button", { type: "button", class: "chip-x", "aria-label": `Bỏ so sánh ${name}` }, icon("i-x"));
+    x.addEventListener("click", (e) => { e.stopPropagation(); setCompare(state.cmp.filter((v) => v !== k)); });
+    chips.push(el("span", { class: "chip" }, lineSwatch(CMP_STYLES[cmpIdx(k)]), name, x));
+  }
+  $("cmpChips").replaceChildren(...chips);
+  $("cmpBtnTxt").textContent = `Chọn đối thủ (${n}/${MAX_CMP})`;
+  $("cmpBtn").setAttribute("aria-expanded", String(cmpOpen));
+  $("cmpPop").hidden = !cmpOpen;
+  if (cmpOpen) fillCmpList(C);
+  renderCmpTable(C);
+}
+
+function fillCmpList(C) {
+  const list = $("cmpList"), keep = list.scrollTop;
+  const focused = document.activeElement && list.contains(document.activeElement) ? document.activeElement.value : null;
+  const q = cmpQuery.trim().toLowerCase(), full = state.cmp.length >= MAX_CMP;
+  const rows = [...C.rows].filter((r) => !r.me && (!q || r.name.toLowerCase().includes(q))).sort((a, b) => a.rank - b.rank);
+  list.replaceChildren(...(rows.length ? rows.map((r) => {
+    const on = state.cmp.includes(r.key), dis = full && !on;
+    return el("li", null, el("label", { class: dis ? "dis" : null },
+      el("input", { type: "checkbox", value: r.key, checked: on ? "" : null, disabled: dis ? "" : null }),
+      el("span", { class: "rk" }, "#" + r.rank), el("span", { class: "nm" }, r.name), el("span", { class: "fl" }, short(r.value))));
+  }) : [el("li", { class: "empty" }, "Không tìm thấy ngân hàng phù hợp.")]));
+  list.scrollTop = keep;
+  if (focused) list.querySelector(`input[value="${CSS.escape(focused)}"]`)?.focus();
+  $("cmpFoot").textContent = `Xếp theo số follower ${C.P.label} tính đến ${dmy(state.to)} · chọn tối đa ${MAX_CMP} ngân hàng`;
+}
+// Giữ bảng chọn trong khung nhìn khi nút nằm sát mép phải màn hình
+function placeCmpPop() {
+  const pop = $("cmpPop"), pad = 16;
+  pop.style.left = "0px";
+  const r = pop.getBoundingClientRect();
+  if (r.right > innerWidth - pad) pop.style.left = `${Math.min(0, innerWidth - pad - r.right)}px`;
+  const r2 = pop.getBoundingClientRect();
+  if (r2.left < pad) pop.style.left = `${parseFloat(pop.style.left) + pad - r2.left}px`;
+}
+function toggleCmp(open) {
+  cmpOpen = open;
+  $("cmpBtn").setAttribute("aria-expanded", String(open));
+  $("cmpPop").hidden = !open;
+  if (open) { fillCmpList(lastC); placeCmpPop(); $("cmpSearch").focus(); }
+}
+
+function renderCmpTable(C) {
+  const tbl = $("cmpTbl"), me = C.rows.find((r) => r.me);
+  const rows = C.rows.filter(isHl).sort((a, b) => a.rank - b.rank);
+  $("cmpHint").hidden = state.cmp.length > 0;
+  const perDay = (r) => r.base && r.date !== r.base[0] ? r.gain / ((t2ms(r.date) - t2ms(r.base[0])) / DAY) : null;
+  const maxGain = Math.max(1, ...rows.map((r) => Math.abs(r.gain || 0)));
+  const gapCell = (v, more, less) => v == null ? el("td", { class: "num" }, "—")
+    : el("td", { class: "num gap-cell" }, el("b", null, signed(v)), el("small", null, v > 0 ? more : v < 0 ? less : "bằng HDBank"));
+  const head = el("tr", null,
+    el("th", { scope: "col" }, "Ngân hàng"), el("th", { scope: "col", class: "num" }, "Hạng"),
+    el("th", { scope: "col", class: "num" }, "Follower"), el("th", { scope: "col", class: "num" }, "Chênh follower với HDBank"),
+    el("th", { scope: "col", class: "num" }, "Tăng thêm trong kỳ"), el("th", { scope: "col", class: "num" }, "% trong kỳ"),
+    el("th", { scope: "col", class: "num" }, "TB mỗi ngày"), el("th", { scope: "col", class: "num" }, "Chênh mức tăng với HDBank"));
+  const tb = el("tbody");
+  for (const r of rows) {
+    const st = styleOf(r), pd = perDay(r);
+    tb.append(el("tr", { class: r.me ? "me" : null },
+      el("td", null, el("a", { class: "bank", href: r.url, target: "_blank", rel: "noopener" }, lineSwatch(st, r.me ? 4 : 3), r.name, icon("i-out"))),
+      el("td", { class: "num" }, el("span", { class: "rank" }, r.rank)),
+      el("td", { class: "num", title: "Cập nhật " + dmy(r.date) }, nf.format(r.value)),
+      r.me || !me ? el("td", { class: "num" }, "—") : gapCell(r.value - me.value, "đối thủ nhiều hơn", "HDBank nhiều hơn"),
+      el("td", { class: "num" }, r.gain == null ? "—" : el("div", { class: "dbar" },
+        el("span", { class: "b", style: `width:${Math.max(2, Math.abs(r.gain) / maxGain * 90)}px;background:${st.c}` }), delta(r.gain))),
+      el("td", { class: "num" }, delta(r.gainPct, signedPct)),
+      el("td", { class: "num" }, pd == null ? "—" : signed(Math.round(pd))),
+      r.me || !me || me.gain == null || r.gain == null ? el("td", { class: "num" }, "—")
+        : gapCell(r.gain - me.gain, "đối thủ tăng nhanh hơn", "HDBank tăng nhanh hơn")));
+  }
+  tbl.replaceChildren(el("thead", null, head), tb);
 }
 
 /* ---------- Vẽ lại toàn trang ---------- */
-const RANGE_TXT = { 7: "1 tuần qua", 30: "1 tháng qua", 90: "3 tháng qua", 0: "toàn bộ thời gian theo dõi" };
 function render() {
+  normalizeRange();
+  syncRangeUI();
   const C = compute();
-  // Danh sách so sánh: mặc định là ngân hàng xếp ngay trên HDBank (hoặc ngay dưới nếu HDBank dẫn đầu)
-  const others = C.rows.filter((r) => !r.me).sort((a, b) => a.rank - b.rank);
-  if (!others.some((r) => r.key === state.cmp)) {
-    const me = C.rows.find((r) => r.me);
-    state.cmp = (me && (others.find((r) => r.rank === me.rank - 1) || others.find((r) => r.rank === me.rank + 1)) || others[0] || {}).key;
-  }
-  const sel = $("cmpSel"); sel.replaceChildren(...others.map((r) => el("option", { value: r.key, selected: r.key === state.cmp ? "" : null }, `${r.name} (#${r.rank})`)));
+  ensureCmp(C);
+  writeHash();
 
-  const period = C.firstDate ? `${RANGE_TXT[state.range]} (${dmy(C.firstDate)} – ${dmy(C.last)})` : RANGE_TXT[state.range];
+  const period = periodText();
   renderKpis(C);
-  $("rankDesc").textContent = `Số người theo dõi ${C.P.label} mới nhất, cập nhật ${dmy(C.last)}.`;
+  renderCompare(C);
+  $("rankDesc").textContent = C.last
+    ? `Số người theo dõi ${C.P.label} tại lần cập nhật cuối cùng tính đến ${dmy(state.to)}.`
+    : "Chưa có số liệu trong khoảng ngày này.";
   $("gainDesc").textContent = `Số follower tăng thêm trong ${period}.`;
   $("trendDesc").textContent = state.mode === "gain"
     ? `Mỗi đường bắt đầu từ 0 ở đầu kỳ, để so sánh tốc độ tăng giữa các ngân hàng có quy mô khác nhau. ${C.P.label}: ${C.P.cadence.toLowerCase()}.`
     : `Tổng số người theo dõi qua từng lần cập nhật. ${C.P.label}: ${C.P.cadence.toLowerCase()}.`;
   $("tableDesc").textContent = `Bấm tiêu đề cột để sắp xếp. Kỳ đang xem: ${period}.`;
 
-  const tipRank = (d) => [{ k: "Follower", v: nf.format(d.value) }, { k: "Hạng", v: `#${d.rank} / ${C.rows.length}` }, { k: "Tăng trong kỳ", v: signed(d.gain) }];
-  const tipGain = (d) => [{ k: "Tăng thêm", v: signed(d.gain) }, { k: "Tốc độ", v: signedPct(d.gainPct) }, { k: "Follower", v: nf.format(d.value) }];
+  const tipRank = (d) => [{ k: "Follower", v: nf.format(d.value) }, { k: "Ngày", v: dmy(d.date) }, { k: "Hạng", v: `#${d.rank} / ${C.rows.length}` }, { k: "Tăng trong kỳ", v: signed(d.gain) }];
+  const tipGain = (d) => [{ k: "Tăng thêm", v: signed(d.gain) }, { k: "Tốc độ", v: signedPct(d.gainPct) }, { k: "Từ", v: `${dmy(d.base[0])} → ${dmy(d.date)}` }];
   $("chRank").dataset.label = "Xếp hạng follower các ngân hàng";
   $("chGain").dataset.label = "Follower tăng thêm trong kỳ của các ngân hàng";
   barChart($("chRank"), C.rows, "value", (v) => nf.format(v), tipRank);
@@ -756,13 +1080,12 @@ function render() {
   renderTable(C);
 }
 
-function bindSeg(id, key, parse = (v) => v) {
+function bindSeg(id, onPick) {
   const seg = $(id);
   seg.addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
     for (const x of seg.querySelectorAll("button")) x.setAttribute("aria-pressed", String(x === b));
-    state[key] = parse(b.dataset.v);
-    if (key === "plat") { history.replaceState(null, "", "#" + state.plat); }
+    onPick(b.dataset.v);
     render();
   });
 }
@@ -825,15 +1148,42 @@ async function init() {
     return;
   }
   document.body.classList.remove("locked");
+  // Sắp điểm số liệu theo ngày tăng dần để mọi phép tính "đầu kỳ / cuối kỳ" đúng
+  for (const P of Object.values(DATA.platforms)) for (const a of P.accounts) a.points.sort((p, q) => (p[0] < q[0] ? -1 : 1));
   $("demoNote").hidden = !DATA.demo;
-  if (location.hash === "#tiktok") {
-    state.plat = "tiktok";
-    for (const b of $("segPlat").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.v === "tiktok"));
+  readHash();
+  for (const b of $("segPlat").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.v === state.plat));
+  for (const b of $("segMode").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.v === state.mode));
+
+  bindSeg("segPlat", (v) => { if (v !== state.plat) { state.plat = v; state.cmp = null; } });
+  bindSeg("segQuick", (v) => { state.preset = Number(v); });
+  bindSeg("segMode", (v) => { state.mode = v; });
+  const onDate = () => { state.preset = null; state.from = $("dFrom").value || null; state.to = $("dTo").value || null; render(); };
+  $("dFrom").addEventListener("change", onDate);
+  $("dTo").addEventListener("change", onDate);
+  const canPick = "showPicker" in HTMLInputElement.prototype;
+  if (!canPick) document.documentElement.classList.add("no-picker");
+  else for (const id of ["bFrom", "bTo"]) {
+    $(id).addEventListener("click", () => {
+      const inp = $($(id).dataset.for);
+      try { inp.showPicker(); } catch { document.documentElement.classList.add("no-picker"); inp.focus(); }
+    });
   }
-  bindSeg("segPlat", "plat");
-  bindSeg("segRange", "range", Number);
-  bindSeg("segMode", "mode");
-  $("cmpSel").addEventListener("change", (e) => { state.cmp = e.target.value; render(); });
+  // Ô ngày gốc ẩn sau nút: không cho tab vào (trừ khi phải dùng ô gốc)
+  if (canPick) for (const id of ["dFrom", "dTo"]) { $(id).tabIndex = -1; $(id).setAttribute("aria-hidden", "true"); }
+  // Bảng chọn đối thủ
+  $("cmpBtn").addEventListener("click", (e) => { e.stopPropagation(); toggleCmp(!cmpOpen); });
+  $("cmpPop").addEventListener("click", (e) => e.stopPropagation());
+  $("cmpSearch").addEventListener("input", (e) => { cmpQuery = e.target.value; fillCmpList(lastC); });
+  $("cmpList").addEventListener("change", (e) => {
+    const k = e.target.value;
+    setCompare(e.target.checked ? [...state.cmp, k] : state.cmp.filter((v) => v !== k));
+  });
+  $("cmpPop").querySelector(".cmp-quick").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-q]"); if (b) setCompare(quickPick(b.dataset.q, lastC));
+  });
+  document.addEventListener("click", () => { if (cmpOpen) toggleCmp(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && cmpOpen) { toggleCmp(false); $("cmpBtn").focus(); } });
   $("btnCsv").addEventListener("click", downloadCsv);
   renderHero();
   render();
