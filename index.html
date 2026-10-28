@@ -18,7 +18,7 @@
    - Chỉ dùng 5 màu thương hiệu (Đỏ, Xám, Cam, Cam Vàng, Vàng) và sắc độ 10–100% của chúng.
      Không dùng màu ngoài hệ (đã bỏ xanh lá cho số tăng: tăng = xám đậm + ▲, giảm = đỏ + ▼).
    - Dải màu chủ đạo chạy từ dưới lên (Cam Vàng → Cam → Đỏ, đỏ đặc chiếm phần lớn phía trên).
-     Dải trái → phải chỉ dành cho biển hiệu hình thang nên không dùng trên trang này.
+     Dải trái → phải (cam → đỏ) chỉ dùng ở đáy ô chỉ số, đồng bộ với trang Xếp hạng app.
    - Chỉ giao diện sáng; logo dương bản trên nền trắng trơn.
    ========================================================= */
 :root {
@@ -46,6 +46,8 @@
   /* Dải màu chủ đạo, dưới → trên */
   --kv-band: linear-gradient(0deg, var(--amber) 0%, var(--orange) 7%, var(--red) 26%, var(--red) 100%);
   --band-up: linear-gradient(0deg, var(--amber) 0%, var(--orange) 35%, var(--red) 100%);
+  /* Dải cam → đỏ ở đáy ô chỉ số, giống trang Xếp hạng app */
+  --band-lr: linear-gradient(90deg, var(--orange) 0%, var(--red) 100%);
   --icon-bg: linear-gradient(0deg, var(--amber) 0%, var(--orange) 24%, var(--red) 68%);
 
   /* Đổ bóng nhẹ tạo chiều sâu (KV 2.e) — chỉ pha từ Xám và Đỏ thương hiệu */
@@ -226,15 +228,20 @@ select:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px va
 
 /* ---------- Chỉ số ---------- */
 main { padding-bottom: 24px; }
-.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
-.tile { position: relative; overflow: hidden; background: var(--white); border-radius: 20px; padding: 18px 20px 20px; box-shadow: var(--lift-sm); min-width: 0; }
-.tile::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 4px; border-radius: 0 4px 4px 0; background: var(--band-up); }
+/* Ô chỉ số: cùng kiểu với trang Xếp hạng app (số lớn + đơn vị + mũi tên trên một hàng, dải màu ở đáy ô) */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; margin-top: 20px; }
+.tile { position: relative; overflow: hidden; background: var(--white); border-radius: 20px; padding: 18px 20px; box-shadow: var(--lift-sm); min-width: 0; }
 .tile .lab { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--muted); }
-.tile .lab i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
-.tile .val { font-size: 36px; font-weight: 700; line-height: 1.1; margin-top: 6px; color: var(--grey); letter-spacing: -.01em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.tile .val small { font-size: 20px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
-.tile .sub { margin-top: 6px; font-size: 14px; color: var(--muted); }
-.tile .sub b { color: var(--grey); }
+.tile .row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-top: 6px; }
+.tile .val { font-size: 40px; font-weight: 700; line-height: 1.1; color: var(--grey); letter-spacing: -.01em; }
+.tile .unit { font-size: 16px; font-weight: 600; color: var(--grey-70); }
+.tile .foot { margin-top: 6px; font-size: 14px; color: var(--muted); }
+.tile .foot b { color: var(--grey); }
+.tile .delta { font-size: 18px; }
+.tile.band { padding-bottom: 22px; }
+.tile.band::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--band-lr); }
+.tile.top1 .row { align-items: center; flex-wrap: nowrap; }
+.tile.top1 .val { font-size: 22px; line-height: 1.25; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .delta { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--flat); }
 .delta.up { color: var(--up); font-weight: 700; }
 .delta.down { color: var(--down); font-weight: 700; }
@@ -309,7 +316,6 @@ tr.me .rank { background: var(--red); color: var(--white); }
 .footer-band { height: 12px; background: var(--band-up); }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 760px) {
   .header-inner { min-height: 60px; gap: 12px; }
   .brand { padding-block: 14px; }
@@ -332,14 +338,17 @@ tr.me .rank { background: var(--red); color: var(--white); }
   .daterange .dbtn { flex: 1 1 auto; text-align: left; }
   .range-row .seg { justify-content: space-between; }
   .range-row .seg button { flex: 1 1 auto; justify-content: center; }
-  .kpis { gap: 12px; }
-  .tile { padding: 14px 16px 16px; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .tile { padding: 14px 16px; }
+  .tile.band { padding-bottom: 19px; }
+  .tile .lab { font-size: 13px; }
   .tile .val { font-size: 28px; }
-  .tile .val small { font-size: 16px; }
+  .tile .foot { font-size: 13px; }
+  .tile.top1 .val { font-size: 18px; }
+  .tile .delta { font-size: 16px; }
   .card { padding: 18px 16px 16px; border-radius: 20px; }
 }
 @media (max-width: 420px) {
-  .kpis { grid-template-columns: 1fr; }
   .daterange > svg { display: none; }
   .daterange { padding-inline: 12px 6px; gap: 2px; }
   .dbtn { font-size: 14px; padding-inline: 4px; }
@@ -701,11 +710,20 @@ function renderHero() {
   meta.append(el("li", null, `${n} tài khoản theo dõi`));
 }
 
-function tile(label, val, sub, dot) {
-  return el("div", { class: "tile" },
-    el("div", { class: "lab" }, dot ? el("i", { style: `background:${dot}` }) : null, label),
-    el("div", { class: "val" }, val), el("div", { class: "sub" }, sub));
+/* Ô chỉ số giống trang Xếp hạng app: nhãn · số lớn + đơn vị + mũi tên · dòng chú thích */
+function tile({ lab, val, unit, badge, foot, cls = "", title }) {
+  return el("div", { class: "tile band " + cls, title },
+    el("div", { class: "lab" }, lab),
+    el("div", { class: "row" }, el("span", { class: "val" }, val), unit ? el("span", { class: "unit" }, unit) : null, badge || null),
+    foot ? el("div", { class: "foot" }, foot) : null);
 }
+// Mũi tên + giá trị tuyệt đối (dấu thể hiện bằng ▲/▼, như trang Xếp hạng app)
+function badge(v, txt) {
+  if (v == null) return null;
+  return el("span", { class: "delta" + (v > 0 ? " up" : v < 0 ? " down" : "") }, (v > 0 ? "▲ " : v < 0 ? "▼ " : "● ") + txt);
+}
+const absPct = (v) => pf.format(Math.abs(v));
+const dec1 = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 });
 
 function renderKpis(C) {
   const box = $("kpis"); box.replaceChildren();
@@ -714,26 +732,30 @@ function renderKpis(C) {
   const byRank = [...C.rows].sort((a, b) => a.rank - b.rank);
   const above = byRank[me.rank - 2];
   const n = C.rows.length;
+  const NEED2 = "Cần ít nhất 2 lần cập nhật trong khoảng ngày này";
 
-  box.append(tile(`Follower HDBank · ${dmy(me.date)}`, nf.format(me.value),
-    [delta(me.prevDelta), me.prevDate ? ` so với ${dmy(me.prevDate)}` : " (lần cập nhật đầu tiên)"], "var(--c-me)"));
+  // 1. Hạng HDBank
+  const dRank = me.baseRank ? me.baseRank - me.rank : null;
+  const rankNote = dRank > 0 ? `Tăng ${dRank} bậc · đầu kỳ #${me.baseRank}` : dRank < 0 ? `Giảm ${-dRank} bậc · đầu kỳ #${me.baseRank}` : null;
+  const gapNote = above ? ["Cách ", el("b", null, above.name), " ", nf.format(above.value - me.value), " follower"] : "Dẫn đầu nhóm theo dõi";
+  box.append(tile({ lab: `Hạng HDBank · ${C.P.label}`, val: "#" + me.rank, unit: `/ ${n} ngân hàng`,
+    badge: dRank ? badge(dRank, Math.abs(dRank)) : null, foot: rankNote ? [gapNote, " · ", rankNote] : gapNote }));
 
-  const rankVal = el("span", null, "#" + me.rank, el("small", null, " / " + n));
-  let rankSub;
-  if (me.baseRank && me.baseRank !== me.rank) {
-    const d = me.baseRank - me.rank;
-    rankSub = [delta(d, (v) => Math.abs(v) + " bậc"), " so với đầu kỳ"];
-  } else rankSub = [above ? ["Cách ", el("b", null, above.name), " ", el("b", null, nf.format(above.value - me.value)), " follower"] : "Dẫn đầu nhóm theo dõi"];
-  box.append(tile("Xếp hạng", rankVal, rankSub));
+  // 2. Follower HDBank
+  box.append(tile({ lab: `Follower HDBank · ${dmy(me.date)}`, val: nf.format(me.value),
+    badge: me.prevDelta != null ? badge(me.prevDelta, nf.format(Math.abs(me.prevDelta))) : null,
+    foot: me.prevDate ? `So với lần cập nhật ${dmy(me.prevDate)}` : "Lần cập nhật đầu tiên" }));
 
-  box.append(tile("HDBank tăng thêm trong kỳ", me.gain == null ? "—" : signed(me.gain),
-    me.gain == null ? "Cần ít nhất 2 lần cập nhật trong khoảng ngày này"
-      : [delta(me.gainPct, signedPct), me.gainRank ? ` · hạng ${me.gainRank}/${n} về số tăng` : ""]));
+  // 3. HDBank tăng thêm trong kỳ
+  box.append(tile({ lab: "HDBank tăng thêm trong kỳ", val: me.gain == null ? "–" : signed(me.gain),
+    badge: me.gain == null ? null : badge(me.gainPct, absPct(me.gainPct)),
+    foot: me.gain == null ? NEED2 : `Hạng ${me.gainRank}/${n} về số tăng · ${dmy(me.base[0])} – ${dmy(me.date)}` }));
 
+  // 4. Tăng nhiều nhất trong kỳ
   const lead = [...C.rows].filter((r) => r.gain != null).sort((a, b) => b.gain - a.gain)[0];
-  box.append(tile("Tăng nhiều nhất trong kỳ", lead ? lead.name : "—",
-    lead ? [el("b", null, signed(lead.gain)), " follower · ", signedPct(lead.gainPct)] : "Cần ít nhất 2 lần cập nhật trong khoảng ngày này",
-    lead ? colorOf(lead) : null));
+  const times = lead && !lead.me && me.gain > 0 ? ` · gấp ${dec1.format(lead.gain / me.gain)} lần HDBank` : "";
+  box.append(tile({ cls: "top1", lab: "Tăng nhiều nhất trong kỳ", val: lead ? lead.name : "–", title: lead ? lead.name : null,
+    foot: lead ? `${signed(lead.gain)} follower (${signedPct(lead.gainPct)})${times}` : NEED2 }));
 }
 
 /* ---------- Biểu đồ thanh ngang (xếp hạng / tăng thêm) ---------- */
