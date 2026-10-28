@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HDBank · Follower đối thủ</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#da2128">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Font thương hiệu: BauhausVO (tiêu đề) và Myriad Pro (nội dung). Máy chưa cài font gốc sẽ dùng
+     Quicksand (thay BauhausVO) và Source Sans 3 (cùng nhà thiết kế Adobe, rất gần Myriad Pro). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* =========================================================
+   TOKENS — HDBank Digital Playbook, đồng bộ với các trang Digital Hub (ggmap-dashboard)
+   Chỉ 5 màu thương hiệu + sắc độ 10–100%; dải màu chạy từ dưới lên; chỉ giao diện sáng.
+   ========================================================= */
+:root {
+  color-scheme: light;
+  --red: #DA2128; --grey: #58595B; --orange: #FAA61A; --amber: #FFC20E; --yellow: #FFDD00;
+  --red-10: #FBE9EA; --red-20: #F8D3D4;
+  --grey-10: #EEEEEF; --grey-20: #DEDEDE; --grey-30: #CDCDCE; --grey-50: #ACACAD; --grey-60: #9B9B9D; --grey-70: #8A8B8C;
+  --orange-10: #FEF6E9; --orange-20: #FEEDD1;
+  --white: #FFFFFF;
+  --muted: var(--grey);
+
+  /* Màu theo thực thể (giữ nguyên trên mọi biểu đồ): HDBank = đỏ, ngân hàng đang so sánh = cam,
+     ngân hàng khác = xám 30%. Bộ đỏ / cam / xám 30% đã kiểm định ở dashboard Google Maps (CVD ΔE ≥ 15,4). */
+  --c-me: var(--red); --c-cmp: var(--orange); --c-other: var(--grey-30);
+  --grid: var(--grey-20); --axis: var(--grey-50); --hover: var(--red-10);
+  --up: #1F7A45; --down: var(--red);
+
+  --font-head: "BauhausVO", "Quicksand", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Myriad Pro", "Source Sans 3", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+
+  --kv-band: linear-gradient(0deg, var(--amber) 0%, var(--orange) 7%, var(--red) 26%, var(--red) 100%);
+  --band-lr: linear-gradient(90deg, var(--orange) 0%, var(--red) 100%);
+  --icon-bg: linear-gradient(0deg, var(--amber) 0%, var(--orange) 24%, var(--red) 68%);
+
+  --lift: 0 1px 2px rgba(88,89,91,.10), 0 10px 24px -12px rgba(88,89,91,.30), 0 36px 72px -32px rgba(110,10,16,.35);
+  --lift-sm: 0 1px 2px rgba(88,89,91,.08), 0 8px 22px -14px rgba(88,89,91,.35);
+
+  --wrap: 1240px;
+  --gutter: clamp(16px, 3vw, 32px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--grey-10); color: var(--grey); font: 16px/1.5 var(--font-body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--font-head); font-weight: 700; line-height: 1.2; margin: 0; color: var(--grey); }
+p { margin: 0; }
+a { color: var(--red); }
+[hidden] { display: none !important; }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; border-radius: 6px; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)); }
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ---------- Nút ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 0 20px;
+  border-radius: 999px; border: 2px solid transparent; font: 600 15px/1 var(--font-body); cursor: pointer; text-decoration: none;
+  transition: background-color .2s, color .2s, box-shadow .2s, transform .2s;
+}
+.btn svg { width: 18px; height: 18px; flex: none; fill: currentColor; }
+.btn-outline { border-color: var(--red); color: var(--red); background: var(--white); }
+.btn-outline:hover { background: var(--red-10); }
+
+/* ---------- Header ---------- */
+.site-header { background: var(--white); }
+.header-inner { display: flex; align-items: center; gap: 20px; min-height: 72px; }
+.brand { display: flex; align-items: center; gap: 16px; text-decoration: none; flex: none; padding-block: 14px; }
+.brand-logo { display: block; height: 34px; width: auto; min-width: 55px; }
+.brand-name { font: 700 16px/1.1 var(--font-head); color: var(--grey); white-space: nowrap; padding-left: 16px; border-left: 1px solid var(--grey-20); }
+.nav { display: flex; gap: 4px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { white-space: nowrap; text-decoration: none; color: var(--grey); font-weight: 600; font-size: 15px; padding: 9px 14px; border-radius: 999px; transition: color .2s, background-color .2s; }
+.nav a:hover { color: var(--red); background: var(--red-10); }
+.nav a[aria-current="page"] { color: var(--red); background: var(--red-10); }
+.nav .short { display: none; }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; overflow: hidden; isolation: isolate; color: var(--white); background: var(--kv-band); }
+.hero::after {
+  content: ""; position: absolute; z-index: -1; top: 0; right: 0; bottom: 0; width: min(56%, 760px);
+  background: url("assets/kite.jpg") left top / cover no-repeat;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 50%); mask-image: linear-gradient(90deg, transparent 0%, #000 50%);
+}
+.hero-inner { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px 24px; align-items: start; padding-block: 40px 104px; }
+.hero-icon { --s: 68px; box-shadow: 0 0 0 3px rgba(255,255,255,.9), 0 14px 28px -12px rgba(0,0,0,.45); }
+.hero h1 { color: var(--white); font-size: clamp(30px, 4vw, 46px); letter-spacing: -.01em; line-height: 1.08; }
+.hero-lead { margin-top: 10px; font-size: 18px; max-width: 40em; text-wrap: pretty; color: rgba(255,255,255,.95); }
+.hero-meta { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.hero-meta li { font-size: 14px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); color: var(--white); }
+.icon1 { --s: 56px; width: var(--s); height: var(--s); border-radius: calc(var(--s) * .2237); flex: none; display: grid; place-items: center; background: var(--icon-bg); }
+.icon1 svg { width: 56%; height: 56%; fill: var(--white); }
+
+/* ---------- Bộ lọc ---------- */
+.filter-dock { position: relative; z-index: 30; margin-top: -64px; padding-block: 0 4px; }
+.filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 20px; background: var(--white); border-radius: 24px; padding: 16px 20px; box-shadow: var(--lift); }
+.f-group { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); min-width: 0; }
+.f-actions { margin-left: auto; }
+/* Nút chọn dạng viên thuốc (Nền tảng, Khoảng thời gian, kiểu biểu đồ) */
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--grey-10); border-radius: 999px; }
+.seg button {
+  display: inline-flex; align-items: center; gap: 8px; font: 600 14px/1 var(--font-body); color: var(--grey); background: none; border: 0;
+  border-radius: 999px; min-height: 34px; padding: 0 14px; cursor: pointer; white-space: nowrap; transition: background-color .15s, color .15s;
+}
+.seg button svg { width: 16px; height: 16px; fill: currentColor; flex: none; }
+.seg button:hover { color: var(--red); }
+.seg button[aria-pressed="true"] { background: var(--red); color: var(--white); box-shadow: 0 6px 14px -8px rgba(218,33,40,.8); }
+.seg.sm button { min-height: 30px; padding: 0 12px; font-size: 13px; }
+select {
+  font: 400 15px/1.2 var(--font-body); color: var(--grey); border: 1.5px solid var(--grey-20); border-radius: 999px; padding: 10px 36px 10px 14px; min-height: 42px; min-width: 170px;
+  appearance: none; -webkit-appearance: none; cursor: pointer; transition: border-color .2s, box-shadow .2s;
+  background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 8l4.5 4.5L14.5 8' fill='none' stroke='%2358595B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 12px center / 16px no-repeat;
+}
+select:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px var(--red-10); }
+.f-cmp select { border-color: var(--orange); }
+
+/* ---------- Mật khẩu: data.json được mã hóa, nhập đúng mật khẩu mới giải mã và hiện dashboard ---------- */
+body.locked .filter-dock, body.locked main { display: none; }
+.gate { position: relative; z-index: 30; margin-top: -64px; padding-bottom: 48px; }
+.gate-card { max-width: 440px; margin-top: 0; display: grid; gap: 12px; box-shadow: var(--lift); }
+.gate-card h2 { font-size: 20px; }
+.gate-card .desc { color: var(--muted); font-size: 14px; }
+.gate-card label { font-weight: 600; font-size: 14px; }
+.gate-card input[type=password] {
+  font: 400 15px/1.2 var(--font-body); color: var(--grey); background: var(--white);
+  border: 1.5px solid var(--grey-20); border-radius: 999px; padding: 10px 14px; min-height: 42px; transition: border-color .2s, box-shadow .2s;
+}
+.gate-card input[type=password]:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px var(--red-10); }
+.gate-card .gate-remember { display: flex; align-items: center; gap: 8px; font-weight: 400; color: var(--muted); }
+.gate-card .gate-remember input { width: 18px; height: 18px; accent-color: var(--red); }
+.gate-err { margin: 0; color: var(--red); font-size: 14px; font-weight: 600; }
+.gate-card .btn { justify-self: start; }
+.btn-red { background: var(--red); color: var(--white); }
+.btn-red:hover:not(:disabled) { box-shadow: 0 10px 20px -10px rgba(218,33,40,.75); transform: translateY(-1px); }
+.btn:disabled { opacity: .6; cursor: progress; }
+
+/* ---------- Thông báo dữ liệu mẫu ---------- */
+.demo-note { display: flex; gap: 12px; align-items: flex-start; margin-top: 16px; padding: 12px 18px; border-radius: 16px; background: var(--orange-10); border: 1px solid var(--orange-20); font-size: 14px; color: var(--grey); }
+.demo-note svg { width: 20px; height: 20px; fill: var(--orange); flex: none; margin-top: 1px; }
+
+/* ---------- Chỉ số ---------- */
+main { padding-bottom: 24px; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+.tile { position: relative; overflow: hidden; background: var(--white); border-radius: 20px; padding: 18px 20px 22px; box-shadow: var(--lift-sm); min-width: 0; }
+.tile::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--band-lr); }
+.tile .lab { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--muted); }
+.tile .lab i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.tile .val { font-size: 36px; font-weight: 700; line-height: 1.1; margin-top: 6px; color: var(--grey); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.tile .val small { font-size: 20px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+.tile .sub { margin-top: 6px; font-size: 14px; color: var(--muted); }
+.tile .sub b { color: var(--grey); }
+.delta { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--grey-70); }
+.delta.up { color: var(--up); }
+.delta.down { color: var(--down); }
+
+/* ---------- Thẻ biểu đồ / bảng ---------- */
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 16px; margin-top: 16px; }
+.card { background: var(--white); border-radius: 24px; padding: 22px 24px 20px; box-shadow: var(--lift-sm); min-width: 0; margin-top: 16px; }
+.grid2 .card { margin-top: 0; }
+.card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 14px; }
+.card h2 { font-size: 20px; }
+.card .desc { flex-basis: 100%; color: var(--muted); font-size: 14px; margin-top: -4px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13px; color: var(--grey); margin-bottom: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 4px; border-radius: 2px; display: inline-block; flex: none; }
+.legend i.box { width: 10px; height: 10px; border-radius: 3px; }
+.chart { width: 100%; position: relative; }
+.chart svg { display: block; overflow: visible; }
+.chart text { fill: var(--muted); font-size: 12px; font-family: var(--font-body); font-variant-numeric: tabular-nums; }
+.chart text.lab { fill: var(--grey); font-size: 13.5px; font-variant-numeric: normal; }
+.chart text.lab.me { font-weight: 700; }
+.chart text.val { fill: var(--grey); font-size: 13px; font-weight: 600; }
+.chart text.end { font-size: 13px; font-weight: 700; fill: var(--grey); }
+.chart .hit { fill: transparent; }
+.chart .row:hover .hit, .chart .row:focus .hit { fill: var(--hover); }
+.chart .row { outline: none; }
+.chart .row:focus-visible .hit { stroke: var(--red); stroke-width: 1.5; }
+.chart .other-line { transition: stroke .15s, stroke-width .15s; }
+.chart .other-line.is-hot { stroke: var(--grey); stroke-width: 2; }
+.nodata { color: var(--muted); padding: 24px 0; }
+
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--grey-10); vertical-align: middle; }
+th { color: var(--grey); font-weight: 700; font-size: 13px; background: #F7F7F7; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+th.sort { cursor: pointer; user-select: none; }
+th.sort::after { content: " ↕"; color: var(--grey-50); }
+th.sort.asc::after { content: " ↑"; color: var(--red); }
+th.sort.desc::after { content: " ↓"; color: var(--red); }
+th.sort:hover { color: var(--red); }
+tbody tr:hover td { background: #FDF6F6; }
+tr.me td { background: var(--red-10); font-weight: 700; }
+.tscroll { overflow-x: auto; border: 1px solid var(--grey-20); border-radius: 16px; }
+.tscroll table { min-width: 680px; }
+.bank { display: inline-flex; align-items: center; gap: 8px; color: var(--grey); font-weight: 600; text-decoration: none; }
+.bank i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.bank svg { width: 12px; height: 12px; fill: var(--red); opacity: .7; flex: none; }
+.bank:hover { color: var(--red); text-decoration: underline; }
+.rank { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px; background: var(--grey-10); font-weight: 700; font-size: 13px; }
+tr.me .rank { background: var(--red); color: var(--white); }
+
+.source-note { display: grid; grid-template-columns: auto 1fr; gap: 14px; margin-top: 16px; padding: 18px 22px; border-radius: 20px; border: 1px solid var(--grey-20); background: var(--white); font-size: 14px; color: var(--grey); }
+.source-note svg { width: 22px; height: 22px; fill: var(--red); }
+.source-note h2 { font-size: 16px; margin-bottom: 4px; }
+.source-note ul { margin: 4px 0 0; padding-left: 18px; }
+
+/* ---------- Tooltip ---------- */
+#tip { position: fixed; pointer-events: none; z-index: 60; background: var(--white); color: var(--grey); border: 1px solid var(--grey-20); border-radius: 12px; padding: 10px 12px; font-size: 13px; box-shadow: var(--lift); min-width: 170px; max-width: 280px; }
+#tip .t { color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+#tip .r { display: flex; align-items: center; gap: 12px; justify-content: space-between; font-variant-numeric: tabular-nums; line-height: 1.6; }
+#tip .r .k { display: inline-flex; align-items: center; gap: 6px; color: var(--grey); }
+#tip .r .k i { width: 12px; height: 4px; border-radius: 2px; display: inline-block; }
+#tip .r.me .k, #tip .r.me b { font-weight: 700; }
+#tip .r b { font-weight: 600; color: var(--grey); }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--white); margin-top: 40px; }
+.footer-inner { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px; padding-block: 26px; font-size: 14px; }
+.footer-inner .brand-logo { height: 30px; }
+.footer-inner p { flex: 1 1 320px; color: var(--muted); }
+.footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.footer-links a { color: var(--grey); font-weight: 600; text-decoration: none; }
+.footer-links a:hover { color: var(--red); text-decoration: underline; }
+.footer-band { height: 8px; background: var(--band-lr); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .header-inner { min-height: 60px; gap: 10px; }
+  .brand { gap: 10px; padding-block: 12px; }
+  .brand-logo { height: 26px; }
+  .brand-name { display: none; }
+  .nav { gap: 2px; }
+  .nav a { padding: 7px 8px; font-size: 14px; }
+  .nav .long { display: none; }
+  .nav .short { display: inline; }
+  .hero::after { width: 72%; opacity: .9; background-image: url("assets/kite-sm.jpg"); }
+  .hero-inner { grid-template-columns: 1fr; padding-block: 28px 92px; gap: 14px; }
+  .hero-icon { --s: 52px; }
+  .hero-lead { font-size: 16px; }
+  .filter-dock { margin-top: -60px; }
+  .filters { padding: 16px; gap: 14px; border-radius: 20px; }
+  .f-group, .f-group select { width: 100%; }
+  .f-actions { margin-left: 0; width: 100%; }
+  .f-actions .btn { width: 100%; }
+  .kpis { gap: 12px; }
+  .tile { padding: 14px 16px 18px; }
+  .tile .val { font-size: 28px; }
+  .tile .val small { font-size: 16px; }
+  .card { padding: 18px 16px 16px; border-radius: 20px; }
+}
+@media (max-width: 420px) { .kpis { grid-template-columns: 1fr; } }
+@media (forced-colors: active) { .legend i, .bank i, .tile .lab i { forced-color-adjust: none; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body class="locked">
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <!-- Icon cấp 1: người + mũi tên tăng -->
+  <symbol id="g-follow" viewBox="0 0 48 48">
+    <path d="M18 8a8 8 0 1 1 0 16 8 8 0 0 1 0-16zM4 40c0-8.3 6.3-13 14-13s14 4.7 14 13v2H4z"/>
+    <path d="M36 10l8 8h-5v10h-6V18h-5z"/>
+  </symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></symbol>
+  <symbol id="i-tt" viewBox="0 0 24 24"><path d="M16.6 3c.4 2.3 1.9 3.8 4.2 4v3.1c-1.5.1-2.9-.4-4.2-1.2v6.3c0 3.6-2.6 6.3-6.2 6.3A6.1 6.1 0 0 1 4.2 15c.1-3.7 3.3-6.4 7-5.9v3.2c-1.8-.4-3.8.7-3.8 2.7 0 1.6 1.3 2.9 3 2.9 1.9 0 3-1.4 3-3.2V3z"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 3h7v7h-2.4V7.1l-8.2 8.2-1.7-1.7 8.2-8.2H14zM5 5h6v2.4H7.4v9.2h9.2V13H19v6H5z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm-1.2 8.5V17h2.4v-6.5zm1.2-4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M10.8 3h2.4v9.2l3.6-3.6 1.7 1.7L12 16.8l-6.5-6.5 1.7-1.7 3.6 3.6zM4 18.6h16V21H4z"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/" aria-label="HDB Digital Hub, về trang chủ">
+      <!-- Logo gốc của HDBank, không vẽ lại / chỉnh sửa -->
+      <img class="brand-logo" src="assets/logo.png" alt="HDBank" width="113" height="30">
+      <span class="brand-name">Digital Hub</span>
+    </a>
+    <nav class="nav" aria-label="Công cụ">
+      <a href="/ggmap-dashboard/">Đánh giá<span class="long"> Google Maps</span></a>
+      <a href="/app-ranking/"><span class="long">Xếp hạng app</span><span class="short">Xếp hạng</span></a>
+      <a href="/social-follower/" aria-current="page"><span class="long">Follower đối thủ</span><span class="short">Follower</span></a>
+      <a href="/ggmap-qrcode/"><span class="long">Tạo mã QR</span><span class="short">Mã QR</span></a>
+      <a href="/bang-ten/"><span class="long">Tạo bảng tên</span><span class="short">Bảng tên</span></a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="page-title">
+  <div class="wrap hero-inner">
+    <span class="icon1 hero-icon" aria-hidden="true"><svg><use href="#g-follow"/></svg></span>
+    <div>
+      <h1 id="page-title">Follower đối thủ</h1>
+      <p class="hero-lead">So sánh lượng người theo dõi Facebook và TikTok của HDBank với các ngân hàng khác.</p>
+      <ul class="hero-meta" id="heroMeta" aria-live="polite"><li>Đang tải dữ liệu…</li></ul>
+    </div>
+  </div>
+</section>
+
+<section class="gate" id="gate" hidden>
+  <div class="wrap">
+    <form class="card gate-card" id="gateForm">
+      <h2>Nhập mật khẩu để xem</h2>
+      <p class="desc">Dữ liệu dashboard được mã hóa. Liên hệ đội Digital Marketing nếu chưa có mật khẩu.</p>
+      <label for="gatePw">Mật khẩu</label>
+      <input type="password" id="gatePw" autocomplete="current-password" required>
+      <label class="gate-remember"><input type="checkbox" id="gateRemember" checked> Ghi nhớ trên trình duyệt này</label>
+      <p class="gate-err" id="gateErr" role="alert" hidden>Mật khẩu chưa đúng, vui lòng nhập lại.</p>
+      <button class="btn btn-red" type="submit" id="gateBtn">Xem dashboard</button>
+    </form>
+  </div>
+</section>
+
+<div class="filter-dock">
+  <div class="wrap">
+    <div class="filters" role="group" aria-label="Bộ lọc">
+      <div class="f-group">
+        <span id="lb-plat">Nền tảng</span>
+        <div class="seg" id="segPlat" role="group" aria-labelledby="lb-plat">
+          <button type="button" data-v="facebook" aria-pressed="true"><svg aria-hidden="true"><use href="#i-fb"/></svg>Facebook</button>
+          <button type="button" data-v="tiktok" aria-pressed="false"><svg aria-hidden="true"><use href="#i-tt"/></svg>TikTok</button>
+        </div>
+      </div>
+      <div class="f-group">
+        <span id="lb-range">Khoảng thời gian</span>
+        <div class="seg" id="segRange" role="group" aria-labelledby="lb-range">
+          <button type="button" data-v="7" aria-pressed="false">1 tuần</button>
+          <button type="button" data-v="30" aria-pressed="true">1 tháng</button>
+          <button type="button" data-v="90" aria-pressed="false">3 tháng</button>
+          <button type="button" data-v="0" aria-pressed="false">Toàn bộ</button>
+        </div>
+      </div>
+      <label class="f-group f-cmp">So sánh HDBank với
+        <select id="cmpSel"></select>
+      </label>
+      <div class="f-actions">
+        <button type="button" class="btn btn-outline" id="btnCsv"><svg aria-hidden="true"><use href="#i-download"/></svg>Tải CSV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <p class="demo-note" id="demoNote" hidden>
+    <svg aria-hidden="true"><use href="#i-info"/></svg>
+    <span><b>Bản xem thử giao diện.</b> Số liệu ngày 28/10/2026 là số thật; số liệu các ngày trước đó là dữ liệu mô phỏng để xem biểu đồ. Khi đưa lên web, trang chỉ dùng số liệu thật đã quét.</span>
+  </p>
+
+  <section class="kpis" id="kpis" aria-live="polite" aria-label="Chỉ số chính của HDBank"></section>
+
+  <div class="grid2">
+    <section class="card" aria-labelledby="h-rank">
+      <header class="card-head">
+        <h2 id="h-rank">Xếp hạng follower</h2>
+        <p class="desc" id="rankDesc"></p>
+      </header>
+      <div class="chart" id="chRank"></div>
+    </section>
+    <section class="card" aria-labelledby="h-gain">
+      <header class="card-head">
+        <h2 id="h-gain">Follower tăng thêm trong kỳ</h2>
+        <p class="desc" id="gainDesc"></p>
+      </header>
+      <div class="chart" id="chGain"></div>
+    </section>
+  </div>
+
+  <section class="card" aria-labelledby="h-trend">
+    <header class="card-head">
+      <h2 id="h-trend">Diễn biến theo thời gian</h2>
+      <div class="seg sm" id="segMode" role="group" aria-label="Kiểu hiển thị">
+        <button type="button" data-v="gain" aria-pressed="true">Tăng thêm từ đầu kỳ</button>
+        <button type="button" data-v="total" aria-pressed="false">Tổng follower</button>
+      </div>
+      <p class="desc" id="trendDesc"></p>
+    </header>
+    <div class="legend" id="trendLegend"></div>
+    <div class="chart" id="chTrend"></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-table">
+    <header class="card-head">
+      <h2 id="h-table">Bảng chi tiết</h2>
+      <p class="desc" id="tableDesc"></p>
+    </header>
+    <div class="tscroll"><table id="tbl"></table></div>
+  </section>
+
+  <aside class="source-note" aria-labelledby="h-src">
+    <svg aria-hidden="true"><use href="#i-info"/></svg>
+    <div>
+      <h2 id="h-src">Về nguồn dữ liệu</h2>
+      <ul>
+        <li><b>Facebook:</b> số người theo dõi chính xác của từng Fanpage công khai, cập nhật hằng ngày lúc 9:00.</li>
+        <li><b>TikTok:</b> số follower chính xác của từng kênh, lấy qua dịch vụ Apify, cập nhật lúc 9:00 thứ 2 và thứ 5 hằng tuần.</li>
+        <li>“Tăng thêm trong kỳ” = số mới nhất trừ số của lần cập nhật đầu tiên trong khoảng thời gian đang xem.</li>
+      </ul>
+    </div>
+  </aside>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <img class="brand-logo" src="assets/logo.png" alt="HDBank" width="113" height="30">
+    <p>HDB Digital Hub là trang nội bộ của đội Digital Marketing HDBank. Số follower lấy từ trang Facebook và TikTok công khai.</p>
+    <ul class="footer-links">
+      <li>Hotline <a href="tel:19006060">1900 6060</a></li>
+      <li><a href="https://www.hdbank.com.vn" target="_blank" rel="noopener">www.hdbank.com.vn</a></li>
+    </ul>
+  </div>
+  <div class="footer-band" aria-hidden="true"></div>
+</footer>
+<div id="tip" hidden></div>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const nf = new Intl.NumberFormat("vi-VN");
+const pf = new Intl.NumberFormat("vi-VN", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const SVGNS = "http://www.w3.org/2000/svg";
+const DAY = 86400000;
+let DATA = null;
+
+const state = { plat: "facebook", range: 30, cmp: null, mode: "gain", sortKey: "value", sortDir: -1 };
+
+/* ---------- Tiện ích DOM (mọi chuỗi dữ liệu đi qua textContent) ---------- */
+function el(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === "class") n.className = v; else if (k === "style") n.style.cssText = v; else n.setAttribute(k, v);
+  }
+  for (const c of kids.flat(Infinity)) if (c != null) n.append(c.nodeType ? c : String(c));
+  return n;
+}
+function sv(tag, attrs, ...kids) {
+  const n = document.createElementNS(SVGNS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) if (v != null) n.setAttribute(k, v);
+  for (const c of kids.flat()) if (c != null) n.append(c.nodeType ? c : String(c));
+  return n;
+}
+function icon(id) { const s = sv("svg", { "aria-hidden": "true" }); s.append(sv("use", { href: "#" + id })); return s; }
+const t2ms = (d) => Date.parse(d + "T00:00:00Z"); // UTC để ngày không bị lệch theo múi giờ
+const ms2d = (t) => new Date(t).toISOString().slice(0, 10);
+const dmy = (d) => d.split("-").reverse().join("/");
+const dm = (d) => { const [, m, dd] = d.split("-"); return `${dd}/${m}`; };
+const signed = (v) => v == null ? "—" : (v > 0 ? "+" : v < 0 ? "−" : "") + nf.format(Math.abs(v));
+const signedPct = (v) => v == null ? "—" : (v > 0 ? "+" : v < 0 ? "−" : "") + pf.format(Math.abs(v));
+function delta(v, fmt = signed) {
+  const cls = v == null || v === 0 ? "" : v > 0 ? " up" : " down";
+  const arrow = v > 0 ? "▲ " : v < 0 ? "▼ " : "";
+  return el("span", { class: "delta" + cls }, arrow + fmt(v));
+}
+const colorOf = (a) => a.me ? "var(--c-me)" : a.key === state.cmp ? "var(--c-cmp)" : "var(--c-other)";
+
+/* ---------- Tính toán theo nền tảng + khoảng thời gian ---------- */
+function compute() {
+  const P = DATA.platforms[state.plat];
+  const accs = P.accounts.filter((a) => a.points.length);
+  const last = accs.reduce((m, a) => Math.max(m, t2ms(a.points.at(-1)[0])), 0);
+  const start = state.range ? last - state.range * DAY : -Infinity;
+  const rows = accs.map((a) => {
+    const pts = a.points.filter(([d]) => t2ms(d) >= start);
+    const cur = a.points.at(-1), prev = a.points.at(-2);
+    const base = pts.length > 1 ? pts[0] : null;
+    const gain = base ? cur[1] - base[1] : null;
+    return {
+      ...a, pts, value: cur[1], date: cur[0],
+      base, gain, gainPct: base ? gain / base[1] : null,
+      prevDelta: prev ? cur[1] - prev[1] : null, prevDate: prev ? prev[0] : null,
+    };
+  });
+  const rankBy = (k) => [...rows].sort((x, y) => (y[k] ?? -Infinity) - (x[k] ?? -Infinity));
+  rankBy("value").forEach((r, i) => (r.rank = i + 1));
+  rankBy("gain").forEach((r, i) => (r.gainRank = r.gain == null ? null : i + 1));
+  // Hạng ở đầu kỳ (theo số đầu kỳ) để biết HDBank lên/xuống hạng
+  const withBase = rows.filter((r) => r.base);
+  [...withBase].sort((x, y) => y.base[1] - x.base[1]).forEach((r, i) => (r.baseRank = i + 1));
+  const firstDate = rows.reduce((m, r) => (r.base && (!m || r.base[0] < m) ? r.base[0] : m), null);
+  return { P, rows, last: ms2d(last), firstDate };
+}
+
+/* ---------- Hero + chỉ số ---------- */
+function renderHero() {
+  const meta = $("heroMeta"); meta.replaceChildren();
+  for (const [k, P] of Object.entries(DATA.platforms)) {
+    const last = P.accounts.flatMap((a) => a.points.map((p) => p[0])).sort().at(-1);
+    meta.append(el("li", null, `${P.label}: cập nhật ${last ? dmy(last) : "—"} · ${P.cadence.toLowerCase()}`));
+  }
+  meta.append(el("li", null, `${DATA.platforms.facebook.accounts.length + DATA.platforms.tiktok.accounts.length} tài khoản theo dõi`));
+}
+
+function tile(label, val, sub, dot) {
+  return el("div", { class: "tile" },
+    el("div", { class: "lab" }, dot ? el("i", { style: `background:${dot}` }) : null, label),
+    el("div", { class: "val" }, val), el("div", { class: "sub" }, sub));
+}
+
+function renderKpis(C) {
+  const box = $("kpis"); box.replaceChildren();
+  const me = C.rows.find((r) => r.me);
+  if (!me) { box.append(el("p", { class: "nodata" }, "Chưa có số liệu HDBank.")); return; }
+  const byRank = [...C.rows].sort((a, b) => a.rank - b.rank);
+  const above = byRank[me.rank - 2];
+  const n = C.rows.length;
+
+  box.append(tile("Follower HDBank", nf.format(me.value),
+    [delta(me.prevDelta), me.prevDate ? ` so với ${dmy(me.prevDate)}` : " (lần cập nhật đầu tiên)"], "var(--c-me)"));
+
+  const rankVal = el("span", null, "#" + me.rank, el("small", null, " / " + n));
+  let rankSub;
+  if (me.baseRank && me.baseRank !== me.rank) {
+    const d = me.baseRank - me.rank;
+    rankSub = [delta(d, (v) => Math.abs(v) + " bậc"), " so với đầu kỳ"];
+  } else rankSub = [above ? ["Cách ", el("b", null, above.name), " ", el("b", null, nf.format(above.value - me.value)), " follower"] : "Dẫn đầu nhóm theo dõi"];
+  box.append(tile("Xếp hạng", rankVal, rankSub));
+
+  box.append(tile("HDBank tăng thêm trong kỳ", me.gain == null ? "—" : signed(me.gain),
+    me.gain == null ? "Chưa đủ số liệu cho kỳ này"
+      : [delta(me.gainPct, signedPct), me.gainRank ? ` · hạng ${me.gainRank}/${n} về số tăng` : ""]));
+
+  const lead = [...C.rows].filter((r) => r.gain != null).sort((a, b) => b.gain - a.gain)[0];
+  box.append(tile("Tăng nhiều nhất trong kỳ", lead ? lead.name : "—",
+    lead ? [el("b", null, signed(lead.gain)), " follower · ", signedPct(lead.gainPct)] : "Chưa đủ số liệu cho kỳ này",
+    lead ? colorOf(lead) : null));
+}
+
+/* ---------- Biểu đồ thanh ngang (xếp hạng / tăng thêm) ---------- */
+function barChart(host, rows, key, fmt, tipRows) {
+  host.replaceChildren();
+  const data = rows.filter((r) => r[key] != null).sort((a, b) => b[key] - a[key]);
+  if (!data.length) { host.append(el("p", { class: "nodata" }, "Chưa đủ số liệu cho khoảng thời gian này.")); return; }
+  const W = Math.max(280, host.clientWidth), rowH = 32, barH = 18, labW = Math.min(120, W * 0.3), valW = 86;
+  const H = data.length * rowH;
+  const min = Math.min(0, ...data.map((d) => d[key])), max = Math.max(0, ...data.map((d) => d[key]));
+  const x = (v) => labW + ((v - min) / (max - min || 1)) * (W - labW - valW);
+  const svg = sv("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": host.dataset.label || "" });
+  data.forEach((d, i) => {
+    const y = i * rowH, x0 = x(Math.min(0, d[key])), x1 = x(Math.max(0, d[key]));
+    const g = sv("g", { class: "row", tabindex: "0" });
+    g.append(sv("rect", { class: "hit", x: 0, y, width: W, height: rowH, rx: 8 }));
+    g.append(sv("text", { class: "lab" + (d.me ? " me" : ""), x: labW - 10, y: y + rowH / 2 + 5, "text-anchor": "end" }, d.name));
+    const w = Math.max(2, x1 - x0), yb = y + (rowH - barH) / 2;
+    // Đầu thanh bo 4px, gốc thanh vuông (bám trục 0)
+    const neg = d[key] < 0, r = Math.min(4, w / 2);
+    const path = neg
+      ? `M${x1},${yb} H${x0 + r} Q${x0},${yb} ${x0},${yb + r} V${yb + barH - r} Q${x0},${yb + barH} ${x0 + r},${yb + barH} H${x1} Z`
+      : `M${x0},${yb} H${x0 + w - r} Q${x0 + w},${yb} ${x0 + w},${yb + r} V${yb + barH - r} Q${x0 + w},${yb + barH} ${x0 + w - r},${yb + barH} H${x0} Z`;
+    g.append(sv("path", { d: path, fill: colorOf(d) }));
+    // Số âm: nhãn đặt bên phải trục 0 để không đè lên tên ngân hàng
+    g.append(sv("text", { class: "val", x: x1 + 6, y: y + rowH / 2 + 4.5 }, fmt(d[key])));
+    const show = (e) => tip(e, d.name, tipRows(d));
+    g.addEventListener("mousemove", show); g.addEventListener("focus", show);
+    g.addEventListener("mouseleave", hideTip); g.addEventListener("blur", hideTip);
+    svg.append(g);
+  });
+  if (min < 0) svg.append(sv("line", { x1: x(0), x2: x(0), y1: 0, y2: H, stroke: "var(--axis)", "stroke-width": 1 }));
+  host.append(svg);
+}
+
+/* ---------- Biểu đồ đường ---------- */
+function niceTicks(lo, hi, n = 5) {
+  if (lo === hi) { hi = lo + 1; }
+  const span = hi - lo, step0 = span / n, mag = 10 ** Math.floor(Math.log10(step0));
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => span / s <= n) || 10 * mag;
+  const t = []; for (let v = Math.floor(lo / step) * step; v <= hi + step * 1e-9; v += step) t.push(Math.round(v * 1e6) / 1e6);
+  if (t[t.length - 1] < hi) t.push(t[t.length - 1] + step);
+  return t;
+}
+const short = (v) => {
+  const a = Math.abs(v);
+  if (a >= 1e6) return (v / 1e6).toLocaleString("vi-VN", { maximumFractionDigits: 2 }) + " Tr";
+  if (a >= 1e3) return (v / 1e3).toLocaleString("vi-VN", { maximumFractionDigits: 1 }) + " N";
+  return nf.format(v);
+};
+
+function lineChart(C) {
+  const host = $("chTrend"); host.replaceChildren();
+  const val = (r, p) => state.mode === "gain" ? p[1] - r.pts[0][1] : p[1];
+  const series = C.rows.filter((r) => r.pts.length > 1);
+  if (!series.length) { host.append(el("p", { class: "nodata" }, "Cần ít nhất 2 lần cập nhật trong khoảng thời gian này để vẽ diễn biến.")); return; }
+  const dates = [...new Set(series.flatMap((r) => r.pts.map((p) => p[0])))].sort();
+  const W = Math.max(300, host.clientWidth), H = W < 560 ? 280 : 340, m = { t: 12, r: W < 560 ? 76 : 104, b: 30, l: 56 };
+  const all = series.flatMap((r) => r.pts.map((p) => val(r, p)));
+  // Chế độ "tăng thêm": trục luôn chứa 0 (đường gốc của kỳ)
+  const ticks = niceTicks(state.mode === "gain" ? Math.min(0, ...all) : Math.min(...all), Math.max(...all));
+  const lo = ticks[0], hi = ticks.at(-1);
+  const t0 = t2ms(dates[0]), t1 = t2ms(dates.at(-1));
+  const x = (d) => m.l + ((t2ms(d) - t0) / (t1 - t0 || 1)) * (W - m.l - m.r);
+  const y = (v) => m.t + (1 - (v - lo) / (hi - lo || 1)) * (H - m.t - m.b);
+  const svg = sv("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": "Diễn biến follower theo thời gian của các ngân hàng" });
+
+  for (const tv of ticks) {
+    svg.append(sv("line", { x1: m.l, x2: W - m.r, y1: y(tv), y2: y(tv), stroke: tv === 0 && lo < 0 ? "var(--axis)" : "var(--grid)", "stroke-width": 1 }));
+    svg.append(sv("text", { x: m.l - 8, y: y(tv) + 4, "text-anchor": "end" }, (state.mode === "gain" && tv > 0 ? "+" : "") + short(tv)));
+  }
+  const nx = Math.max(2, Math.min(6, Math.floor((W - m.l - m.r) / 90)));
+  const step = Math.max(1, Math.round((dates.length - 1) / (nx - 1)));
+  for (let i = 0; i < dates.length; i += step) svg.append(sv("text", { x: x(dates[i]), y: H - 8, "text-anchor": "middle" }, dm(dates[i])));
+
+  // Thứ tự vẽ: ngân hàng khác (xám) → ngân hàng so sánh (cam) → HDBank (đỏ) trên cùng
+  const order = [...series].sort((a, b) => (a.me ? 2 : a.key === state.cmp ? 1 : 0) - (b.me ? 2 : b.key === state.cmp ? 1 : 0));
+  const lines = new Map();
+  for (const r of order) {
+    const hl = r.me || r.key === state.cmp;
+    const d = r.pts.map((p, i) => (i ? "L" : "M") + x(p[0]).toFixed(1) + "," + y(val(r, p)).toFixed(1)).join("");
+    const path = sv("path", { d, fill: "none", stroke: colorOf(r), "stroke-width": r.me ? 2.5 : hl ? 2 : 1.5,
+      "stroke-linejoin": "round", "stroke-linecap": "round", class: hl ? "" : "other-line" });
+    svg.append(path); lines.set(r.key, path);
+  }
+  // Nhãn trực tiếp ở cuối đường cho HDBank và ngân hàng so sánh (giãn ra nếu chồng nhau)
+  const labs = order.filter((r) => r.me || r.key === state.cmp)
+    .map((r) => ({ r, y: y(val(r, r.pts.at(-1))) })).sort((a, b) => a.y - b.y);
+  for (let i = 1; i < labs.length; i++) if (labs[i].y - labs[i - 1].y < 16) labs[i].y = labs[i - 1].y + 16;
+  for (const { r, y: ly } of labs) {
+    const lp = r.pts.at(-1);
+    svg.append(sv("circle", { cx: x(lp[0]), cy: y(val(r, lp)), r: 4, fill: colorOf(r), stroke: "#fff", "stroke-width": 2 }));
+    svg.append(sv("text", { class: "end", x: x(lp[0]) + 8, y: ly + 4 }, r.name));
+  }
+
+  // Lớp hover: đường dọc + chấm + tooltip liệt kê tất cả ngân hàng tại ngày gần nhất
+  const cross = sv("line", { y1: m.t, y2: H - m.b, stroke: "var(--grey-50)", "stroke-width": 1, "stroke-dasharray": "3 3", visibility: "hidden" });
+  const dots = sv("g", { visibility: "hidden" });
+  svg.append(cross, dots);
+  const hit = sv("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: "transparent" });
+  svg.append(hit);
+  const move = (e) => {
+    const bx = svg.getBoundingClientRect(), px = e.clientX - bx.left;
+    const d = dates.reduce((b, dd) => Math.abs(x(dd) - px) < Math.abs(x(b) - px) ? dd : b, dates[0]);
+    cross.setAttribute("x1", x(d)); cross.setAttribute("x2", x(d)); cross.setAttribute("visibility", "visible");
+    dots.replaceChildren(); dots.setAttribute("visibility", "visible");
+    const at = series.map((r) => ({ r, p: r.pts.find((p) => p[0] === d) })).filter((o) => o.p)
+      .map((o) => ({ ...o, v: val(o.r, o.p) })).sort((a, b) => b.v - a.v);
+    for (const o of at) if (o.r.me || o.r.key === state.cmp)
+      dots.append(sv("circle", { cx: x(d), cy: y(o.v), r: 4.5, fill: colorOf(o.r), stroke: "#fff", "stroke-width": 2 }));
+    tip(e, dmy(d) + (state.mode === "gain" ? " · tăng thêm từ đầu kỳ" : " · tổng follower"),
+      at.map((o) => ({ k: o.r.name, v: state.mode === "gain" ? signed(o.v) : nf.format(o.v), c: colorOf(o.r), me: o.r.me })));
+  };
+  hit.addEventListener("mousemove", move);
+  hit.addEventListener("mouseleave", () => { cross.setAttribute("visibility", "hidden"); dots.setAttribute("visibility", "hidden"); hideTip(); });
+  host.append(svg);
+}
+
+function renderLegend(C) {
+  const lg = $("trendLegend"); lg.replaceChildren();
+  const cmp = C.rows.find((r) => r.key === state.cmp);
+  lg.append(el("span", null, el("i", { style: "background:var(--c-me)" }), "HDBank"));
+  if (cmp) lg.append(el("span", null, el("i", { style: "background:var(--c-cmp)" }), cmp.name));
+  lg.append(el("span", null, el("i", { style: "background:var(--c-other)" }), "Ngân hàng khác (rê chuột để xem số)"));
+}
+
+/* ---------- Bảng ---------- */
+const COLS = [
+  { k: "rank", t: "Hạng", num: false },
+  { k: "name", t: "Ngân hàng" },
+  { k: "value", t: "Follower", num: true },
+  { k: "gain", t: "Tăng thêm trong kỳ", num: true },
+  { k: "gainPct", t: "% trong kỳ", num: true },
+  { k: "prevDelta", t: "So với lần trước", num: true },
+];
+function renderTable(C) {
+  const tbl = $("tbl"); tbl.replaceChildren();
+  const tr = el("tr");
+  for (const c of COLS) {
+    const th = el("th", { class: "sort" + (c.num ? " num" : "") + (state.sortKey === c.k ? (state.sortDir > 0 ? " asc" : " desc") : ""), scope: "col",
+      tabindex: "0", "aria-sort": state.sortKey === c.k ? (state.sortDir > 0 ? "ascending" : "descending") : "none" }, c.t);
+    const go = () => { state.sortDir = state.sortKey === c.k ? -state.sortDir : (c.k === "name" || c.k === "rank" ? 1 : -1); state.sortKey = c.k; renderTable(C); };
+    th.addEventListener("click", go); th.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    tr.append(th);
+  }
+  tbl.append(el("thead", null, tr));
+  const k = state.sortKey, dir = state.sortDir;
+  const rows = [...C.rows].sort((a, b) => {
+    const x = a[k], y = b[k];
+    if (x == null) return 1; if (y == null) return -1;
+    return (typeof x === "string" ? x.localeCompare(y, "vi") : x - y) * dir;
+  });
+  const tb = el("tbody");
+  for (const r of rows) {
+    tb.append(el("tr", { class: r.me ? "me" : null },
+      el("td", null, el("span", { class: "rank" }, r.rank)),
+      el("td", null, el("a", { class: "bank", href: r.url, target: "_blank", rel: "noopener" },
+        el("i", { style: `background:${colorOf(r)}` }), r.name, icon("i-out"))),
+      el("td", { class: "num" }, nf.format(r.value)),
+      el("td", { class: "num" }, delta(r.gain)),
+      el("td", { class: "num" }, delta(r.gainPct, signedPct)),
+      el("td", { class: "num", title: r.prevDate ? "So với " + dmy(r.prevDate) : "" }, delta(r.prevDelta))));
+  }
+  tbl.append(tb);
+}
+
+/* ---------- Tooltip ---------- */
+const tipEl = $("tip");
+function tip(e, title, rows) {
+  tipEl.replaceChildren(el("div", { class: "t" }, title),
+    ...rows.map((r) => el("div", { class: "r" + (r.me ? " me" : "") },
+      el("span", { class: "k" }, r.c ? el("i", { style: `background:${r.c}` }) : null, r.k), el("b", null, r.v))));
+  tipEl.hidden = false;
+  const b = e.clientX != null ? { x: e.clientX, y: e.clientY } : (() => { const r = e.target.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top }; })();
+  const tw = tipEl.offsetWidth, th = tipEl.offsetHeight;
+  let lx = b.x + 14, ly = b.y + 14;
+  if (lx + tw > innerWidth - 8) lx = b.x - tw - 14;
+  if (ly + th > innerHeight - 8) ly = Math.max(8, b.y - th - 14);
+  tipEl.style.left = lx + "px"; tipEl.style.top = ly + "px";
+}
+function hideTip() { tipEl.hidden = true; }
+
+/* ---------- CSV ---------- */
+function downloadCsv() {
+  const C = compute();
+  const head = ["Nền tảng", "Hạng", "Ngân hàng", "Link", "Follower", "Ngày cập nhật", "Đầu kỳ (ngày)", "Đầu kỳ (follower)", "Tăng thêm trong kỳ", "% trong kỳ"];
+  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const lines = [head.map(q).join(",")];
+  for (const r of [...C.rows].sort((a, b) => a.rank - b.rank))
+    lines.push([C.P.label, r.rank, r.name, r.url, r.value, r.date, r.base?.[0], r.base?.[1], r.gain, r.gainPct == null ? "" : (r.gainPct * 100).toFixed(2) + "%"].map(q).join(","));
+  const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const a = el("a", { href: URL.createObjectURL(blob), download: `follower_${state.plat}_${C.last}.csv` });
+  document.body.append(a); a.click(); a.remove();
+}
+
+/* ---------- Vẽ lại toàn trang ---------- */
+const RANGE_TXT = { 7: "1 tuần qua", 30: "1 tháng qua", 90: "3 tháng qua", 0: "toàn bộ thời gian theo dõi" };
+function render() {
+  const C = compute();
+  // Danh sách so sánh: mặc định là ngân hàng xếp ngay trên HDBank (hoặc ngay dưới nếu HDBank dẫn đầu)
+  const others = C.rows.filter((r) => !r.me).sort((a, b) => a.rank - b.rank);
+  if (!others.some((r) => r.key === state.cmp)) {
+    const me = C.rows.find((r) => r.me);
+    state.cmp = (me && (others.find((r) => r.rank === me.rank - 1) || others.find((r) => r.rank === me.rank + 1)) || others[0] || {}).key;
+  }
+  const sel = $("cmpSel"); sel.replaceChildren(...others.map((r) => el("option", { value: r.key, selected: r.key === state.cmp ? "" : null }, `${r.name} (#${r.rank})`)));
+
+  const period = C.firstDate ? `${RANGE_TXT[state.range]} (${dmy(C.firstDate)} – ${dmy(C.last)})` : RANGE_TXT[state.range];
+  renderKpis(C);
+  $("rankDesc").textContent = `Số người theo dõi ${C.P.label} mới nhất, cập nhật ${dmy(C.last)}.`;
+  $("gainDesc").textContent = `Số follower tăng thêm trong ${period}.`;
+  $("trendDesc").textContent = state.mode === "gain"
+    ? `Mỗi đường bắt đầu từ 0 ở đầu kỳ, để so sánh tốc độ tăng giữa các ngân hàng có quy mô khác nhau. ${C.P.label}: ${C.P.cadence.toLowerCase()}.`
+    : `Tổng số người theo dõi qua từng lần cập nhật. ${C.P.label}: ${C.P.cadence.toLowerCase()}.`;
+  $("tableDesc").textContent = `Bấm tiêu đề cột để sắp xếp. Kỳ đang xem: ${period}.`;
+
+  const tipRank = (d) => [{ k: "Follower", v: nf.format(d.value) }, { k: "Hạng", v: `#${d.rank} / ${C.rows.length}` }, { k: "Tăng trong kỳ", v: signed(d.gain) }];
+  const tipGain = (d) => [{ k: "Tăng thêm", v: signed(d.gain) }, { k: "Tốc độ", v: signedPct(d.gainPct) }, { k: "Follower", v: nf.format(d.value) }];
+  $("chRank").dataset.label = "Xếp hạng follower các ngân hàng";
+  $("chGain").dataset.label = "Follower tăng thêm trong kỳ của các ngân hàng";
+  barChart($("chRank"), C.rows, "value", (v) => nf.format(v), tipRank);
+  barChart($("chGain"), C.rows, "gain", signed, tipGain);
+  renderLegend(C);
+  lineChart(C);
+  renderTable(C);
+}
+
+function bindSeg(id, key, parse = (v) => v) {
+  const seg = $(id);
+  seg.addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    for (const x of seg.querySelectorAll("button")) x.setAttribute("aria-pressed", String(x === b));
+    state[key] = parse(b.dataset.v);
+    if (key === "plat") { history.replaceState(null, "", "#" + state.plat); }
+    render();
+  });
+}
+
+/* ---------- Mật khẩu: data.json là bản mã AES-256-GCM, khóa từ mật khẩu bằng PBKDF2-SHA256 (khớp xuat_web.py) ---------- */
+const KEY_STORE = "social-follower.key"; // khóa đã tính (không phải mật khẩu) khi người xem chọn "Ghi nhớ"
+const b64dec = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+const b64enc = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+async function deriveKey(pw, box) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", hash: "SHA-256", salt: b64dec(box.salt), iterations: box.iter },
+    base, { name: "AES-GCM", length: 256 }, true, ["decrypt"]);
+}
+async function openBox(box, key) {
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64dec(box.iv) }, key, b64dec(box.data));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+/* Mở khóa bằng khóa đã ghi nhớ; không có hoặc sai (đổi mật khẩu) thì hiện ô nhập mật khẩu. */
+async function unlock(box) {
+  const tag = `${box.salt}|${box.iter}|`;
+  try {
+    const saved = localStorage.getItem(KEY_STORE);
+    if (saved && saved.startsWith(tag)) {
+      const key = await crypto.subtle.importKey("raw", b64dec(saved.slice(tag.length)), "AES-GCM", false, ["decrypt"]);
+      return await openBox(box, key);
+    }
+  } catch (err) { try { localStorage.removeItem(KEY_STORE); } catch (e) { /* bỏ qua */ } }
+  $("heroMeta").replaceChildren(el("li", null, "Cần mật khẩu để xem"));
+  $("gate").hidden = false;
+  $("gatePw").focus();
+  return new Promise((resolve) => {
+    $("gateForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      $("gateErr").hidden = true; $("gateBtn").disabled = true; $("gateBtn").textContent = "Đang mở…";
+      try {
+        const key = await deriveKey($("gatePw").value, box);
+        const data = await openBox(box, key);
+        if ($("gateRemember").checked) {
+          try { localStorage.setItem(KEY_STORE, tag + b64enc(await crypto.subtle.exportKey("raw", key))); } catch (err) { /* không lưu được thì thôi */ }
+        }
+        $("gate").hidden = true;
+        resolve(data);
+      } catch (err) {
+        $("gateErr").hidden = false; $("gatePw").select();
+      } finally {
+        $("gateBtn").disabled = false; $("gateBtn").textContent = "Xem dashboard";
+      }
+    });
+  });
+}
+
+async function init() {
+  try {
+    const res = await fetch("data.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const raw = await res.json();
+    DATA = raw.enc ? await unlock(raw) : raw;
+  } catch (err) {
+    $("heroMeta").replaceChildren(el("li", null, "Không tải được dữ liệu, vui lòng tải lại trang"));
+    return;
+  }
+  document.body.classList.remove("locked");
+  $("demoNote").hidden = !DATA.demo;
+  if (location.hash === "#tiktok") {
+    state.plat = "tiktok";
+    for (const b of $("segPlat").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.v === "tiktok"));
+  }
+  bindSeg("segPlat", "plat");
+  bindSeg("segRange", "range", Number);
+  bindSeg("segMode", "mode");
+  $("cmpSel").addEventListener("change", (e) => { state.cmp = e.target.value; render(); });
+  $("btnCsv").addEventListener("click", downloadCsv);
+  renderHero();
+  render();
+  let w = innerWidth, tm;
+  addEventListener("resize", () => { if (innerWidth === w) return; w = innerWidth; clearTimeout(tm); tm = setTimeout(render, 120); });
+}
+init();
+</script>
+</body>
+</html>
