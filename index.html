@@ -276,7 +276,10 @@ const ms2d = (t) => new Date(t).toISOString().slice(0, 10);
 const dmy = (d) => d.split("-").reverse().join("/");
 const dm = (d) => { const [, m, dd] = d.split("-"); return `${dd}/${m}`; };
 const signed = (v) => v == null ? "—" : (v > 0 ? "+" : v < 0 ? "−" : "") + nf.format(Math.abs(v));
-const signedPct = (v) => v == null ? "—" : (v > 0 ? "+" : v < 0 ? "−" : "") + pf.format(Math.abs(v));
+// Thay đổi khác 0 nhưng làm tròn thành 0,00% thì hiện "<0,01%" (chiều tăng/giảm đã có ▲▼ hoặc dấu +/− ở số tuyệt đối)
+const TINY_PCT = "<" + pf.format(0.0001);
+const isTinyPct = (v) => v !== 0 && Math.abs(v) < 0.00005;
+const signedPct = (v) => v == null ? "—" : isTinyPct(v) ? TINY_PCT : (v > 0 ? "+" : v < 0 ? "−" : "") + pf.format(Math.abs(v));
 function delta(v, fmt = signed) {
   const cls = v == null || v === 0 ? "" : v > 0 ? " up" : " down";
   const arrow = v > 0 ? "▲ " : v < 0 ? "▼ " : "";
@@ -459,7 +462,7 @@ function badge(v, txt) {
   if (v == null) return null;
   return el("span", { class: "delta" + (v > 0 ? " up" : v < 0 ? " down" : "") }, (v > 0 ? "▲ " : v < 0 ? "▼ " : "● ") + txt);
 }
-const absPct = (v) => pf.format(Math.abs(v));
+const absPct = (v) => isTinyPct(v) ? TINY_PCT : pf.format(Math.abs(v));
 const dec1 = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 });
 
 function renderKpis(C) {
