@@ -782,7 +782,8 @@ function renderCmpTable(C) {
   const rows = C.rows.filter(isHl).sort((a, b) => a.rank - b.rank);
   $("cmpHint").hidden = state.cmp.length > 0;
   const perDay = (r) => r.base && r.date !== r.base[0] ? r.gain / ((t2ms(r.date) - t2ms(r.base[0])) / DAY) : null;
-  const maxGain = Math.max(1, ...rows.map((r) => Math.abs(r.gain || 0)));
+  // Thanh chỉ vẽ cho số tăng (dài theo mức tăng lớn nhất); số giảm / bằng 0 chỉ hiện ▼ và con số
+  const maxGain = Math.max(1, ...rows.map((r) => r.gain > 0 ? r.gain : 0));
   const gapCell = (v, more, less) => v == null ? el("td", { class: "num" }, "—")
     : el("td", { class: "num gap-cell" }, el("b", null, signed(v)), el("small", null, v > 0 ? more : v < 0 ? less : "bằng HDBank"));
   const head = el("tr", null,
@@ -799,7 +800,7 @@ function renderCmpTable(C) {
       el("td", { class: "num", title: "Cập nhật " + dmy(r.date) }, nf.format(r.value)),
       r.me || !me ? el("td", { class: "num" }, "—") : gapCell(r.value - me.value, "đối thủ nhiều hơn", "HDBank nhiều hơn"),
       el("td", { class: "num" }, r.gain == null ? "—" : el("div", { class: "cell-bar" },
-        el("span", { class: "b", style: `width:${Math.max(2, Math.abs(r.gain) / maxGain * 90)}px;background:${st.c}` }), delta(r.gain))),
+        r.gain > 0 ? el("span", { class: "b", style: `width:${Math.max(2, r.gain / maxGain * 90)}px;background:${st.c}` }) : null, delta(r.gain))),
       el("td", { class: "num" }, delta(r.gainPct, signedPct)),
       el("td", { class: "num" }, pd == null ? "—" : signed(Math.round(pd))),
       r.me || !me || me.gain == null || r.gain == null ? el("td", { class: "num" }, "—")
